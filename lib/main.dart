@@ -40,10 +40,72 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final _router = GoRouter(routes: [
-  GoRoute(path: '/',
-  builder: (context, state) => MyHomePage(title: "PGBC Pard Desk (TM)"))
-]);
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => MyHomePage(title: "pgbc parddesk"), 
+      routes: [
+        GoRoute(
+          path: 'sign-in',
+          builder: (context, state) {
+            return SignInScreen(
+              actions: [
+                ForgotPasswordAction(((context, email) {
+                  final uri = Uri(
+                    path: '/sign-in/forgot-pswd', 
+                    queryParameters: <String, String?>{'email': email,}
+                  );
+                  context.push(uri.toString());
+                })),
+                AuthStateChangeAction(((context, state) {
+                  final user = switch (state) {
+                    SignedIn state => state.user,
+                    UserCreated state => state.credential.user,
+                    _ => null
+                  };
+                  if (user == null) return;
+                  if (state is UserCreated) user.updateDisplayName(user.email!.split('@')[0]);
+                  if (!user.emailVerified) {
+                    user.sendEmailVerification();
+                    const snackBar = SnackBar(content: Text('Please check your email to verify your address'));
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                  context.pushReplacement('/');
+                }))
+              ],
+            );
+          },
+          routes: [
+            GoRoute(
+              path: 'forgot-passwd',
+              builder: (context, state) {
+                final arguments = state.uri.queryParameters;
+                return ForgotPasswordScreen(
+                  email: arguments['email'],
+                  headerMaxExtent: 200,
+                );
+              }
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'profile',
+          builder: (context, state) {
+            return ProfileScreen(
+              providers: const [],
+              actions: [
+                SignedOutAction((context) {
+                  context.pushReplacement('/');
+                }),
+              ],
+            );
+          },
+        )
+      ],
+    ),
+  ],
+);
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -115,15 +177,10 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text('Here is a button to take you to the login page:'),
-            ElevatedButton(onPressed: () {}, child: Text("Login"))
+            ElevatedButton(onPressed: () {}, child: Text("Login")),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
