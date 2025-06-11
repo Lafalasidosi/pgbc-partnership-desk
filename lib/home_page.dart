@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: const Text('WIP AppBar')),
       body: ListView(
         children: <Widget>[
-          Text("Here's some homepage text."), 
+          //Text("Here's some homepage text."), 
           Consumer<ApplicationState>(
             builder: (context, appState, _) => AuthFunc(
               loggedIn: appState.loggedIn, 

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_page.dart';
 import 'app_state.dart';
+import 'schedule_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // this was commented when below was first fixed
@@ -98,6 +99,11 @@ final _router = GoRouter(
               ],
             );
           },
+        ),
+        GoRoute(
+          path: 'schedule',
+          builder: (context, state) {return SchedulePage();},
+          routes: [],
         )
       ],
     ),

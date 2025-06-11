@@ -18,7 +18,7 @@ class AuthFunc extends StatelessWidget {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 24, bottom: 8),
+          padding: const EdgeInsets.only(left: 48, bottom: 8),
           child: StyledButton(
             onPressed: () {
               !loggedIn ? context.push('/sign-in') : signOut();
@@ -38,6 +38,17 @@ class AuthFunc extends StatelessWidget {
             ),
           ),
         ),
+        Visibility(
+          visible: loggedIn,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 33, bottom: 33),
+            child: StyledButton(
+              child: const Text('Schedule'),
+              onPressed: () {
+              context.push('/schedule');
+            }),
+            ),
+          ),
       ],
     );
   }
