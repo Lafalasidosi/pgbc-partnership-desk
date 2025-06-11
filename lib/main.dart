@@ -5,11 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_page.dart';
+import 'app_state.dart';
 
 void main() {
-  //WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); // this was commented when below was first fixed
 
-  runApp(const MyApp());
+  runApp( // The real fix is here: used to read, "runApp(const MyApp())," 
+          // which led to "Could not find the correct Provider<ApplicationState> above this...."
+    ChangeNotifierProvider(create: (context) => ApplicationState(),
+      builder: ((context, child) => const MyApp()))
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -44,7 +49,9 @@ final _router = GoRouter(
                 ForgotPasswordAction(((context, email) {
                   final uri = Uri(
                     path: '/sign-in/forgot-pswd', 
-                    queryParameters: <String, String?>{'email': email,}
+                    queryParameters: <String, String?>{
+                      'email': email,
+                    },
                   );
                   context.push(uri.toString());
                 })),

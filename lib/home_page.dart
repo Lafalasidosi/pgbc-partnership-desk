@@ -7,6 +7,7 @@ import 'app_state.dart';
 import 'src/authentication.dart';
 import 'src/widgets.dart';
 
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -16,7 +17,15 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: const Text('WIP AppBar')),
       body: ListView(
         children: <Widget>[
-          Text("Here's some homepage text.")
+          Text("Here's some homepage text."), 
+          Consumer<ApplicationState>(
+            builder: (context, appState, _) => AuthFunc(
+              loggedIn: appState.loggedIn, 
+              signOut: () {
+                FirebaseAuth.instance.signOut();
+              },
+            ),
+          ),
         ],
       ),
     );
