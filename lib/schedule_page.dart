@@ -20,10 +20,12 @@ class SchedulePage extends StatelessWidget {
               builder: (context, appState, _) => Column(
                 children: [
                   if (appState.loggedIn) ...[
-                    ElevatedButton(
-                      onPressed: () {}, 
-                      child: const Text('Register')),
-                    // PartnershipDesk(registerForPartner: registerForPartner, deregisterForPartner: deregisterForPartner)
+                    PartnershipDesk(
+                      registerForPartner: () => 
+                      appState.addPlayerToPartnershipDesk(),
+                      players: appState.players,
+                      deregisterForPartner: () {},
+                    )
                   ]
               ],)
             ),
