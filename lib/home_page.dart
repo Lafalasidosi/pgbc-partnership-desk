@@ -16,14 +16,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('WIP AppBar')),
+      appBar: AppBar(title: const Text('PGBC Partnership Desk')),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(child: Text('Drawer Header')),
+            const DrawerHeader(child: Text('Main Menu')),
             ListTile(
-              title: Text('yoohoo'), 
+              title: Text('Schedule'), 
               onTap: () {context.pushReplacement('/schedule'); }
             )
           ],
