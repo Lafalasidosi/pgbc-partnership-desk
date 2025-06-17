@@ -58,4 +58,17 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
+Future<DocumentReference> addPlayerToPartnershipDesk() {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+
+    return FirebaseFirestore.instance
+    .collection('partnershipdesk')
+    .add(<String, dynamic>{
+      'username': FirebaseAuth.instance.currentUser!.displayName,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'userID': FirebaseAuth.instance.currentUser!.uid,
+    }); // FirebaseFirestore
+  } 
 }
