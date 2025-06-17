@@ -25,7 +25,9 @@ class _PartnershipDeskState extends State<PartnershipDesk>{
     return Column(
       children: [
         ElevatedButton(
-                      onPressed: () {}, 
+                      onPressed: () async {
+                        await widget.registerForPartner();
+                      }, 
                       child: const Text('Register')),
         for (var p in widget.players)
           ElevatedButton(onPressed: () {}, child: Text(p.getName()))
