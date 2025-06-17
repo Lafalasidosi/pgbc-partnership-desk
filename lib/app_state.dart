@@ -45,7 +45,7 @@ class ApplicationState extends ChangeNotifier {
           .listen((snapshot) {
             _players = []; 
             for (final document in snapshot.docs) {
-              _players.add(Player(name: document.data()['name'] as String));
+              _players.add(Player(name: FirebaseAuth.instance.currentUser!.displayName as String));
             }
           });
         notifyListeners();
