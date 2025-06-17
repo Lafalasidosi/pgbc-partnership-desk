@@ -9,7 +9,6 @@ class SchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: const Text( 'Upcoming games')),
         body: ListView(
