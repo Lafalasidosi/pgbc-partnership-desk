@@ -2,7 +2,10 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:pdv0/partnership_desk.dart';
+import 'src/widgets.dart';
+import 'package:provider/provider.dart';
+import 'app_state.dart';
 
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});
@@ -13,7 +16,17 @@ class SchedulePage extends StatelessWidget {
       appBar: AppBar(title: const Text( 'Upcoming games')),
         body: ListView(
           children: <Widget>[
-            const Text('This is where the scheule is going to go.'),
+            Consumer<ApplicationState>(
+              builder: (context, appState, _) => Column(
+                children: [
+                  if (appState.loggedIn) ...[
+                    ElevatedButton(
+                      onPressed: () {}, 
+                      child: const Text('Register')),
+                    // PartnershipDesk(registerForPartner: registerForPartner, deregisterForPartner: deregisterForPartner)
+                  ]
+              ],)
+            ),
           ]
         )
       
