@@ -6,8 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pdv0/player.dart';
 
 import 'firebase_options.dart';
+import 'player.dart';
 
 
 class ApplicationState extends ChangeNotifier {
@@ -21,6 +23,8 @@ class ApplicationState extends ChangeNotifier {
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
+  List<Player> _players = [];
+  List<Player> get players => _players;
 
 
   // Funtions
@@ -35,9 +39,20 @@ class ApplicationState extends ChangeNotifier {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
-        
+        _partnershipDeskSubscription = FirebaseFirestore.instance
+          .collection('partnershipdesk')
+          .snapshots()
+          .listen((snapshot) {
+            _players = []; 
+            for (final document in snapshot.docs) {
+              _players.add(Player(name: document.data()['name'] as String));
+            }
+          });
+        notifyListeners();
       } else {
         _loggedIn = false;
+        _players = [];
+        _partnershipDeskSubscription?.cancel();
       }
       notifyListeners();
     }); // FirebaseAuth
