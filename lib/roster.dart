@@ -15,7 +15,13 @@ class _RosterState extends State<Roster> {
       children: [
         Container(
           color: Color(0xFFFF0000),
-          child: ElevatedButton(onPressed: () {}, child: Text('what\'s up:')),
+          child: ElevatedButton(
+            onPressed: () {},
+            style: ButtonStyle(
+              foregroundColor: WidgetStatePropertyAll(Color(0xfa6000f0)),
+            ),
+            child: Text('what\'s up:'),
+          ),
         ),
       ],
     );
