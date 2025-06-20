@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'player.dart';
 
-// import 'guest_book_message.dart';
 import 'src/widgets.dart';
 
 class PartnershipDesk extends StatefulWidget {
@@ -29,8 +28,6 @@ class _PartnershipDeskState extends State<PartnershipDesk>{
                         await widget.registerForPartner();
                       }, 
                       child: const Text('Register')),
-        for (var p in widget.players)
-          ElevatedButton(onPressed: () {}, child: Text(p.getName()))
       ],
     );
   }
