@@ -11,10 +11,13 @@ import 'schedule_page.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized(); // this was commented when below was first fixed
 
-  runApp( // The real fix is here: used to read, "runApp(const MyApp())," 
-          // which led to "Could not find the correct Provider<ApplicationState> above this...."
-    ChangeNotifierProvider(create: (context) => ApplicationState(),
-      builder: ((context, child) => const MyApp()))
+  runApp(
+    // The real fix is here: used to read, "runApp(const MyApp()),"
+    // which led to "Could not find the correct Provider<ApplicationState> above this...."
+    ChangeNotifierProvider(
+      create: (context) => ApplicationState(),
+      builder: ((context, child) => const MyApp()),
+    ),
   );
 }
 
@@ -35,12 +38,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => HomePage(), 
+      builder: (context, state) => HomePage(),
       routes: [
         GoRoute(
           path: 'sign-in',
@@ -49,10 +51,8 @@ final _router = GoRouter(
               actions: [
                 ForgotPasswordAction(((context, email) {
                   final uri = Uri(
-                    path: '/sign-in/forgot-pswd', 
-                    queryParameters: <String, String?>{
-                      'email': email,
-                    },
+                    path: '/sign-in/forgot-pswd',
+                    queryParameters: <String, String?>{'email': email},
                   );
                   context.push(uri.toString());
                 })),
@@ -60,17 +60,22 @@ final _router = GoRouter(
                   final user = switch (state) {
                     SignedIn state => state.user,
                     UserCreated state => state.credential.user,
-                    _ => null
+                    _ => null,
                   };
                   if (user == null) return;
-                  if (state is UserCreated) user.updateDisplayName(user.email!.split('@')[0]);
+                  if (state is UserCreated)
+                    user.updateDisplayName(user.email!.split('@')[0]);
                   if (!user.emailVerified) {
                     user.sendEmailVerification();
-                    const snackBar = SnackBar(content: Text('Please check your email to verify your address'));
+                    const snackBar = SnackBar(
+                      content: Text(
+                        'Please check your email to verify your address',
+                      ),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
                   context.pushReplacement('/');
-                }))
+                })),
               ],
             );
           },
@@ -83,7 +88,7 @@ final _router = GoRouter(
                   email: arguments['email'],
                   headerMaxExtent: 200,
                 );
-              }
+              },
             ),
           ],
         ),
@@ -102,9 +107,11 @@ final _router = GoRouter(
         ),
         GoRoute(
           path: 'schedule',
-          builder: (context, state) {return SchedulePage();},
+          builder: (context, state) {
+            return SchedulePage();
+          },
           routes: [],
-        )
+        ),
       ],
     ),
   ],

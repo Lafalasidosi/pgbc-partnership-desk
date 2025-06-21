@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:pdv0/player.dart';
 
 import 'firebase_options.dart';
+import 'player.dart';
 
 class ApplicationState extends ChangeNotifier {
   // Constructor
@@ -22,7 +23,6 @@ class ApplicationState extends ChangeNotifier {
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   List<Player> _players = [];
   List<Player> get players => _players;
-  var currentDate = DateTime.now();
 
   // Funtions
   Future<void> init() async {
@@ -67,13 +67,11 @@ class ApplicationState extends ChangeNotifier {
     }
 
     return FirebaseFirestore.instance
-        .collection('partnershipdesk')
-        .add(<String, dynamic>{
-          'username': FirebaseAuth.instance.currentUser!.displayName,
-          'timestamp': DateTime.now().millisecondsSinceEpoch,
-          'userID': FirebaseAuth.instance.currentUser!.uid,
-        }); // FirebaseFirestore
-  }
-
-  // DateTime next
+    .collection('partnershipdesk')
+    .add(<String, dynamic>{
+      'username': FirebaseAuth.instance.currentUser!.displayName,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'userID': FirebaseAuth.instance.currentUser!.uid,
+    }); // FirebaseFirestore
+  } 
 }

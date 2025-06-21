@@ -6,7 +6,12 @@ import 'player.dart';
 import 'src/widgets.dart';
 
 class PartnershipDesk extends StatefulWidget {
-  PartnershipDesk({super.key, required this.registerForPartner, required this.deregisterForPartner, required this.players});
+  PartnershipDesk({
+    super.key,
+    required this.registerForPartner,
+    required this.deregisterForPartner,
+    required this.players,
+  });
 
   final FutureOr<void> Function() registerForPartner;
   final FutureOr<void> Function() deregisterForPartner;
@@ -16,7 +21,7 @@ class PartnershipDesk extends StatefulWidget {
   State<StatefulWidget> createState() => _PartnershipDeskState();
 }
 
-class _PartnershipDeskState extends State<PartnershipDesk>{
+class _PartnershipDeskState extends State<PartnershipDesk> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_PartnershipDeskState');
 
   @override
@@ -24,12 +29,14 @@ class _PartnershipDeskState extends State<PartnershipDesk>{
     return Column(
       children: [
         ElevatedButton(
-                      onPressed: () async {
-                        await widget.registerForPartner();
-                      }, 
-                      child: const Text('Register')),
+          onPressed: () async {
+            await widget.registerForPartner();
+          },
+          child: const Text('Register'),
+        ),
+        for (var p in widget.players)
+          ElevatedButton(onPressed: () {}, child: Text(p.getName())),
       ],
     );
   }
 }
-

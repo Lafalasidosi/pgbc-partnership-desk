@@ -1,11 +1,9 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:pdv0/partnership_desk.dart';
 import 'src/widgets.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
+import 'roster.dart';
 
 class SchedulePage extends StatelessWidget {
   const SchedulePage({super.key});
@@ -29,10 +27,10 @@ class SchedulePage extends StatelessWidget {
                   ]
               ],)
             ),
+            Roster(),
           ]
         )
       
     );
   }
-
 }
