@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
                   },
                 ),
           ),
-          RegistrationWidget(day: 2),
+          RegistrationWidget(weekday: 2),
         ],
       ),
     );
