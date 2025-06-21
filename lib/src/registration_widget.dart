@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationWidget extends StatefulWidget {
-  RegistrationWidget({super.key, required this.day});
+  RegistrationWidget({super.key, required this.weekday});
   
-  final int day;
+  final int weekday;
   
   @override
   _RegistrationWidgetState createState() => _RegistrationWidgetState();
@@ -20,27 +20,63 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
       padding: EdgeInsets.all(12),
       child: Column(
         children: [
-          Text(getUpcomingDay(currentDate, widget.day).toString()),
-          RegistrationButton(text: 'I need a partner'),
-          RegistrationButton(text: 'I have a partner'),
+          Text('Upcoming game:'),
+          Text(getUpcomingDay(currentDate, widget.weekday).toString()),
+          RegistrationButton(text: 'I need a partner', function: () {}),
+          RegistrationButton(text: 'I have a partner', function: () {}),
         ],
       ),
     );
   }
 
-  DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
+  String getUpcomingDay(DateTime today, int dayOfWeek) {
+    
+    String? weekdayName;
+    String? monthName;
+    int date;
+    int year;
+    String time = '6:45pm';
+    
+    final Map<int, String> dayMap = {1: 'Monday', 
+                  2: 'Tuesday', 
+                  3: 'Wednesday', 
+                  4: 'Thursday', 
+                  5: 'Friday',
+                  6: 'Saturday', 
+                  7: 'Sunday'};
+
+    final Map<int, String> monthMap = {1: 'January',
+                                       2: 'February', 
+                                       3: 'March', 
+                                       4: 'April', 
+                                       5: 'May', 
+                                       6: 'June', 
+                                       7: 'July', 
+                                       8: 'August', 
+                                       9: 'September', 
+                                       10: 'October', 
+                                       11: 'November', 
+                                       12: 'December'};
+
+    
+
     // Tuesdays are 2, Thursdays are 4
     while (today.weekday != dayOfWeek) {  
       today = today.add(const Duration(days: 1));
     }
-    return today;
+
+    weekdayName = dayMap[dayOfWeek];
+    monthName = monthMap[today.month];
+    year = today.year;
+    date = today.day;
+
+    return  "$weekdayName, $monthName $date $year $time";
   }
 }
 
 class RegistrationButton extends StatelessWidget {
   final String text;
   final VoidCallback? function;
-
   const RegistrationButton({super.key, required this.text, this.function});
 
   @override
@@ -50,7 +86,7 @@ class RegistrationButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: function,
         style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(Color(0xff5000aa)),
+          backgroundColor: WidgetStatePropertyAll(Color.fromARGB(187, 126, 3, 240)),
           foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
         ),
         child: Text(text),
