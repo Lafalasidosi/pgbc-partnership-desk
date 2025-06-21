@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class RegistrationWidget extends StatefulWidget {
-  RegistrationWidget({super.key});
-
+  RegistrationWidget({super.key, required this.day});
+  
+  final int day;
+  
   @override
   _RegistrationWidgetState createState() => _RegistrationWidgetState();
 }
 
 class _RegistrationWidgetState extends State<RegistrationWidget> {
-  var current_date = DateTime.now();
+  var currentDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +20,20 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
       padding: EdgeInsets.all(12),
       child: Column(
         children: [
-          Text(current_date.toString()),
+          Text(getUpcomingDay(currentDate, widget.day).toString()),
           RegistrationButton(text: 'I need a partner'),
           RegistrationButton(text: 'I have a partner'),
         ],
       ),
     );
+  }
+
+  DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
+    // Tuesdays are 2, Thursdays are 4
+    while (today.weekday != dayOfWeek) {  
+      today = today.add(const Duration(days: 1));
+    }
+    return today;
   }
 }
 
