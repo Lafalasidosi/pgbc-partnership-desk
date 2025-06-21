@@ -30,7 +30,7 @@ class RegistrationButton extends StatelessWidget {
   final String text;
   final VoidCallback? function;
 
-  RegistrationButton({required this.text, this.function});
+  const RegistrationButton({super.key, required this.text, this.function});
 
   @override
   Widget build(BuildContext context) {
