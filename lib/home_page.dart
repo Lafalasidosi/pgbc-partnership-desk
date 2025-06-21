@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdv0/schedule_page.dart';
+import 'package:pdv0/src/registration_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
@@ -22,13 +23,15 @@ class HomePage extends StatelessWidget {
           children: [
             const DrawerHeader(child: Text('Main Menu')),
             ListTile(
-              title: Text('Schedule'), 
-              onTap: () {context.pushReplacement('/schedule'); }
-            )
+              title: Text('Schedule'),
+              onTap: () {
+                context.pushReplacement('/schedule');
+              },
+            ),
           ],
         ),
       ),
-      body: ListView(
+      body: Column(
         children: <Widget>[
           //Text("Here's some homepage text."),
           Consumer<ApplicationState>(
@@ -40,6 +43,7 @@ class HomePage extends StatelessWidget {
                   },
                 ),
           ),
+          RegistrationWidget(day: 2),
         ],
       ),
     );
