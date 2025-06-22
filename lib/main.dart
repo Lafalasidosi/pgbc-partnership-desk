@@ -105,13 +105,6 @@ final _router = GoRouter(
             );
           },
         ),
-        GoRoute(
-          path: 'schedule',
-          builder: (context, state) {
-            return SchedulePage();
-          },
-          routes: [],
-        ),
       ],
     ),
   ],

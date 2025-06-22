@@ -38,17 +38,6 @@ class AuthFunc extends StatelessWidget {
             ),
           ),
         ),
-        Visibility(
-          visible: loggedIn,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 24, bottom: 8),
-            child: StyledButton(
-              child: const Text('Schedule'),
-              onPressed: () {
-              context.push('/schedule');
-            }),
-            ),
-          ),
       ],
     );
   }
