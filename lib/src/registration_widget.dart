@@ -3,9 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationWidget extends StatefulWidget {
-  RegistrationWidget({super.key, required this.weekday});
+  RegistrationWidget({super.key, required this.weekday, required this.loggedIn});
   
   final int weekday;
+  final bool loggedIn;
   
   @override
   _RegistrationWidgetState createState() => _RegistrationWidgetState();
@@ -16,16 +17,19 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      child: Column(
-        children: [
-          Text('Upcoming game:'),
-          Text(getUpcomingDay(currentDate, widget.weekday).toString()),
-          RegistrationButton(text: 'I need a partner', function: () {}),
-          RegistrationButton(text: 'I have a partner', function: () {}),
-        ],
-      ),
+    return Visibility(
+      visible: widget.loggedIn,
+      child: Container(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Text('Upcoming game:'),
+            Text(getUpcomingDay(currentDate, widget.weekday).toString()),
+            RegistrationButton(text: 'I need a partner', function: () {}),
+            RegistrationButton(text: 'I have a partner', function: () {}),
+          ],
+        ),
+      )
     );
   }
 

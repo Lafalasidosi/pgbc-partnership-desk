@@ -42,7 +42,9 @@ class HomePage extends StatelessWidget {
                   },
                 ),
           ),
-          RegistrationWidget(weekday: 2),
+          Consumer<ApplicationState>(
+            builder: (context, appState, _) => RegistrationWidget(weekday: 2, loggedIn: appState.loggedIn,),
+          )
         ],
       ),
     );
