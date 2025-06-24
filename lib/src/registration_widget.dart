@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationWidget extends StatefulWidget {
-  RegistrationWidget({
+  const RegistrationWidget({
     super.key,
     required this.weekday,
     required this.loggedIn,
@@ -16,11 +16,14 @@ class RegistrationWidget extends StatefulWidget {
   final bool loggedIn;
 
   @override
-  _RegistrationWidgetState createState() => _RegistrationWidgetState();
+  RegistrationWidgetState createState() => RegistrationWidgetState();
 }
 
-class _RegistrationWidgetState extends State<RegistrationWidget> {
+class RegistrationWidgetState extends State<RegistrationWidget> {
   var currentDate = DateTime.now();
+  final _formKey = GlobalKey<FormState>();
+  final controller = TextEditingController();
+
   final Map<int, String> dayMap = {
     1: 'Monday',
     2: 'Tuesday',
@@ -63,30 +66,60 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
           children: [
             Text('Upcoming game:'),
             Text(nextGame),
-            RegistrationButton(
-              text: 'I need a partner',
-              function: () {
-                db
-                .doc(uname) // Already a player can't register more than once, unlike before
-                .set(
-                  <String, dynamic>{
-                    'username': uname,
-                    'game': nextGame,
-                    'partner': null,
-                  }  
-                );
-              },
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  RegistrationButton(
+                    text: 'I need a partner',
+                    function: () {
+                      db
+                          .doc(
+                            uname,
+                          ) // Already a player can't register more than once, unlike before
+                          .set(<String, dynamic>{
+                            'username': uname,
+                            'game': nextGame,
+                            'partner': null,
+                          });
+                    },
+                  ),
+                  TextFormField(
+                    controller: controller,
+                    decoration: InputDecoration(helperText: 'Partner\'s name'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter your partner\'s name, please.';
+                      }
+                      return null;
+                    },
+                  ),
+                  RegistrationButton(
+                    text: 'I have a partner', 
+                    function: () {
+                      if (_formKey.currentState!.validate()) {
+                        db
+                          .doc(
+                            uname,
+                          ) // Already a player can't register more than once, unlike before
+                          .set(<String, dynamic>{
+                            'username': uname,
+                            'game': nextGame,
+                            'partner': controller.text,
+                          });
+                        controller.clear();
+                      }
+                    }),
+                  RegistrationButton(
+                    text: 'Unregister',
+                    function: () {
+                      db.doc(uname).delete(); // maybe add then() for logging
+                    },
+                  ),
+                ],
+              ),
             ),
-            PartnerNameField(),
-            RegistrationButton(
-              text: 'I have a partner', 
-              function: () {}),
-            RegistrationButton(
-              text: 'Unregister',
-              function: () {
-                db.doc(uname).delete(); // maybe add then() for logging
-              }
-            )
           ],
         ),
       ),
@@ -147,19 +180,19 @@ class PartnerNameField extends StatefulWidget {
 class _PartnerNameFieldState extends State<PartnerNameField> {
   final controller = TextEditingController();
 
-  @override 
+  @override
   void dispose() {
     controller.dispose();
     super.dispose();
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 160,
       child: TextField(
-      controller: controller,
-      decoration: const InputDecoration(label: Text('Partner\'s name') ),
+        controller: controller,
+        decoration: const InputDecoration(label: Text('Partner\'s name')),
       ),
     );
   }
