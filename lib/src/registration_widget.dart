@@ -51,6 +51,8 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
     String currentDateAsString =
         "${dayMap[currentDate.weekday]}, ${monthMap[currentDate.month]} ${currentDate.day} ${currentDate.year} 6:45pm";
     String nextGame = getUpcomingDay(currentDate, widget.weekday).toString();
+    var db = FirebaseFirestore.instance.collection(nextGame);
+    String? uname = FirebaseAuth.instance.currentUser!.displayName;
     return Visibility(
       visible: widget.loggedIn,
       child: Container(
@@ -62,11 +64,11 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
             RegistrationButton(
               text: 'I need a partner',
               function: () {
-                FirebaseFirestore.instance
-                .collection(nextGame)
-                .add(
+                db
+                .doc(uname) // Already a player can't register more than once, unlike before
+                .set(
                   <String, dynamic>{
-                    'username': FirebaseAuth.instance.currentUser!.displayName,
+                    'username': uname,
                     'game': nextGame,
                     'partner': null,
                   }  
@@ -76,6 +78,12 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
             RegistrationButton(
               text: 'I have a partner', 
               function: () {}),
+            RegistrationButton(
+              text: 'Unregister',
+              function: () {
+                db.doc(uname).delete(); // maybe add then() for logging
+              }
+            )
           ],
         ),
       ),
