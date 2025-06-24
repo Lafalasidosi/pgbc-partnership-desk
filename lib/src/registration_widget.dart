@@ -5,42 +5,50 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class RegistrationWidget extends StatefulWidget {
-  RegistrationWidget({super.key, required this.weekday, required this.loggedIn});
-  
+  RegistrationWidget({
+    super.key,
+    required this.weekday,
+    required this.loggedIn,
+  });
+
   final int weekday;
   final bool loggedIn;
-  
+
   @override
   _RegistrationWidgetState createState() => _RegistrationWidgetState();
 }
 
 class _RegistrationWidgetState extends State<RegistrationWidget> {
-
   var currentDate = DateTime.now();
-  final Map<int, String> dayMap = {1: 'Monday', 
-                  2: 'Tuesday', 
-                  3: 'Wednesday', 
-                  4: 'Thursday', 
-                  5: 'Friday',
-                  6: 'Saturday',
-                  7: 'Sunday'};
+  final Map<int, String> dayMap = {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    7: 'Sunday',
+  };
 
-    final Map<int, String> monthMap = {1: 'January',
-                                       2: 'February', 
-                                       3: 'March', 
-                                       4: 'April', 
-                                       5: 'May', 
-                                       6: 'June', 
-                                       7: 'July', 
-                                       8: 'August', 
-                                       9: 'September', 
-                                       10: 'October', 
-                                       11: 'November', 
-                                       12: 'December'};
+  final Map<int, String> monthMap = {
+    1: 'January',
+    2: 'February',
+    3: 'March',
+    4: 'April',
+    5: 'May',
+    6: 'June',
+    7: 'July',
+    8: 'August',
+    9: 'September',
+    10: 'October',
+    11: 'November',
+    12: 'December',
+  };
 
   @override
   Widget build(BuildContext context) {
-    String currentDateAsString = "${dayMap[currentDate.weekday]}, ${monthMap[currentDate.month]} ${currentDate.day} ${currentDate.year} 6:45pm";
+    String currentDateAsString =
+        "${dayMap[currentDate.weekday]}, ${monthMap[currentDate.month]} ${currentDate.day} ${currentDate.year} 6:45pm";
     String nextGame = getUpcomingDay(currentDate, widget.weekday).toString();
     return Visibility(
       visible: widget.loggedIn,
@@ -51,31 +59,27 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
             Text('Upcoming game:'),
             Text(nextGame),
             RegistrationButton(
-              text: 'I need a partner', 
+              text: 'I need a partner',
               function: () {
                 // FirebaseFirestore.instance.collection(nextGame)
-              }),
-            RegistrationButton(
-              text: 'I have a partner', 
-              function: () {}),
+              },
+            ),
+            RegistrationButton(text: 'I have a partner', function: () {}),
           ],
         ),
-      )
+      ),
     );
   }
 
   String getUpcomingDay(DateTime today, int dayOfWeek) {
-    
     String? weekdayName;
     String? monthName;
     int date;
     int year;
     String time = '6:45pm';
-    
-    
-  
+
     // Tuesdays are 2, Thursdays are 4
-    while (today.weekday != dayOfWeek) {  
+    while (today.weekday != dayOfWeek) {
       today = today.add(const Duration(days: 1));
     }
 
@@ -84,7 +88,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
     year = today.year;
     date = today.day;
 
-    return  "$weekdayName, $monthName $date $year $time";
+    return "$weekdayName, $monthName $date $year $time";
   }
 }
 
@@ -100,7 +104,9 @@ class RegistrationButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: function,
         style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(Color.fromARGB(187, 126, 3, 240)),
+          backgroundColor: WidgetStatePropertyAll(
+            Color.fromARGB(187, 126, 3, 240),
+          ),
           foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
         ),
         child: Text(text),

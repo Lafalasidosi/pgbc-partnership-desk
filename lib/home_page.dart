@@ -43,8 +43,10 @@ class HomePage extends StatelessWidget {
                 ),
           ),
           Consumer<ApplicationState>(
-            builder: (context, appState, _) => RegistrationWidget(weekday: 2, loggedIn: appState.loggedIn,),
-          )
+            builder:
+                (context, appState, _) =>
+                    RegistrationWidget(weekday: 2, loggedIn: appState.loggedIn),
+          ),
         ],
       ),
     );
