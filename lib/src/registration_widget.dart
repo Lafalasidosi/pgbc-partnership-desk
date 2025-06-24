@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -61,10 +62,20 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
             RegistrationButton(
               text: 'I need a partner',
               function: () {
-                // FirebaseFirestore.instance.collection(nextGame)
+                FirebaseFirestore.instance
+                .collection(nextGame)
+                .add(
+                  <String, dynamic>{
+                    'username': FirebaseAuth.instance.currentUser!.displayName,
+                    'game': nextGame,
+                    'partner': null,
+                  }  
+                );
               },
             ),
-            RegistrationButton(text: 'I have a partner', function: () {}),
+            RegistrationButton(
+              text: 'I have a partner', 
+              function: () {}),
           ],
         ),
       ),
