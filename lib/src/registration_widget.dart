@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -13,41 +15,9 @@ class RegistrationWidget extends StatefulWidget {
 }
 
 class _RegistrationWidgetState extends State<RegistrationWidget> {
-  @override
-  Widget build(BuildContext context) {
-    var currentDate = DateTime.now();
-    String nextGame = getUpcomingDay(currentDate, widget.weekday).toString();
-    return Visibility(
-      visible: widget.loggedIn,
-      child: Container(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Text('Upcoming game:'),
-            Text(nextGame),
-            RegistrationButton(
-              text: 'I need a partner', 
-              function: () {
-                
-              }),
-            RegistrationButton(
-              text: 'I have a partner', 
-              function: () {}),
-          ],
-        ),
-      )
-    );
-  }
 
-  String getUpcomingDay(DateTime today, int dayOfWeek) {
-    
-    String? weekdayName;
-    String? monthName;
-    int date;
-    int year;
-    String time = '6:45pm';
-    
-    final Map<int, String> dayMap = {1: 'Monday', 
+  var currentDate = DateTime.now();
+  final Map<int, String> dayMap = {1: 'Monday', 
                   2: 'Tuesday', 
                   3: 'Wednesday', 
                   4: 'Thursday', 
@@ -67,6 +37,42 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                                        10: 'October', 
                                        11: 'November', 
                                        12: 'December'};
+
+  @override
+  Widget build(BuildContext context) {
+    String currentDateAsString = "${dayMap[currentDate.weekday]}, ${monthMap[currentDate.month]} ${currentDate.day} ${currentDate.year} 6:45pm";
+    String nextGame = getUpcomingDay(currentDate, widget.weekday).toString();
+    return Visibility(
+      visible: widget.loggedIn,
+      child: Container(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Text('Upcoming game:'),
+            Text(nextGame),
+            RegistrationButton(
+              text: 'I need a partner', 
+              function: () {
+                // FirebaseFirestore.instance.collection(nextGame)
+              }),
+            RegistrationButton(
+              text: 'I have a partner', 
+              function: () {}),
+          ],
+        ),
+      )
+    );
+  }
+
+  String getUpcomingDay(DateTime today, int dayOfWeek) {
+    
+    String? weekdayName;
+    String? monthName;
+    int date;
+    int year;
+    String time = '6:45pm';
+    
+    
   
     // Tuesdays are 2, Thursdays are 4
     while (today.weekday != dayOfWeek) {  
