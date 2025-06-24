@@ -13,10 +13,10 @@ class RegistrationWidget extends StatefulWidget {
 }
 
 class _RegistrationWidgetState extends State<RegistrationWidget> {
-  var currentDate = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
+    var currentDate = DateTime.now();
+    String nextGame = getUpcomingDay(currentDate, widget.weekday).toString();
     return Visibility(
       visible: widget.loggedIn,
       child: Container(
@@ -24,9 +24,15 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
         child: Column(
           children: [
             Text('Upcoming game:'),
-            Text(getUpcomingDay(currentDate, widget.weekday).toString()),
-            RegistrationButton(text: 'I need a partner', function: () {}),
-            RegistrationButton(text: 'I have a partner', function: () {}),
+            Text(nextGame),
+            RegistrationButton(
+              text: 'I need a partner', 
+              function: () {
+                
+              }),
+            RegistrationButton(
+              text: 'I have a partner', 
+              function: () {}),
           ],
         ),
       )
@@ -46,7 +52,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                   3: 'Wednesday', 
                   4: 'Thursday', 
                   5: 'Friday',
-                  6: 'Saturday', 
+                  6: 'Saturday',
                   7: 'Sunday'};
 
     final Map<int, String> monthMap = {1: 'January',
@@ -61,9 +67,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                                        10: 'October', 
                                        11: 'November', 
                                        12: 'December'};
-
-    
-
+  
     // Tuesdays are 2, Thursdays are 4
     while (today.weekday != dayOfWeek) {  
       today = today.add(const Duration(days: 1));
