@@ -56,7 +56,9 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
     return Visibility(
       visible: widget.loggedIn,
       child: Container(
-        padding: EdgeInsets.all(12),
+        width: 400,
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(60),
         child: Column(
           children: [
             Text('Upcoming game:'),
@@ -75,6 +77,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                 );
               },
             ),
+            PartnerNameField(),
             RegistrationButton(
               text: 'I have a partner', 
               function: () {}),
@@ -129,6 +132,34 @@ class RegistrationButton extends StatelessWidget {
           foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
         ),
         child: Text(text),
+      ),
+    );
+  }
+}
+
+class PartnerNameField extends StatefulWidget {
+  const PartnerNameField({super.key});
+
+  @override
+  State<PartnerNameField> createState() => _PartnerNameFieldState();
+}
+
+class _PartnerNameFieldState extends State<PartnerNameField> {
+  final controller = TextEditingController();
+
+  @override 
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override 
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 160,
+      child: TextField(
+      controller: controller,
+      decoration: const InputDecoration(label: Text('Partner\'s name') ),
       ),
     );
   }
