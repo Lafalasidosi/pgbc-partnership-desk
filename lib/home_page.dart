@@ -45,7 +45,33 @@ class HomePage extends StatelessWidget {
           Consumer<ApplicationState>(
             builder:
                 (context, appState, _) =>
-                    RegistrationWidget(weekday: 2, loggedIn: appState.loggedIn),
+                    Visibility(
+                      visible: appState.loggedIn,
+                      child: Container(
+                        width: 400,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(60),
+                        child: Column(
+                          children: [
+                            Text('Upcoming game:'),
+                            Text(appState.getUpcomingDayAsString(appState.currentDate, 2)), // look for next Tuesday
+                            Form(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  RegistrationButton(
+                                    text: 'I need a partner',
+                                    function: () {
+                                      
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
           ),
         ],
       ),
