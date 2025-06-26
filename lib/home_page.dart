@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdv0/partnership_desk.dart';
 import 'package:pdv0/src/registration_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -47,30 +48,10 @@ class HomePage extends StatelessWidget {
                 (context, appState, _) =>
                     Visibility(
                       visible: appState.loggedIn,
-                      child: Container(
-                        width: 400,
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(60),
-                        child: Column(
-                          children: [
-                            Text('Upcoming game:'),
-                            Text(appState.getUpcomingDayAsString(appState.currentDate, 2)), // look for next Tuesday
-                            Form(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  RegistrationButton(
-                                    text: 'I need a partner',
-                                    function: () {
-                                      
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      child: PartnershipDesk(
+                        registerForPartner: (dayOfWeek) => appState.addPlayerLookingForPartner(dayOfWeek), 
+                        deregisterForPartner: () => appState.deregister(), 
+                        upcomingGameDate: appState.getUpcomingDayAsString(2))
                     ),
           ),
         ],
