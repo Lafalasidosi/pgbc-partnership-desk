@@ -56,11 +56,18 @@ class ApplicationState extends ChangeNotifier {
     .add(<String, dynamic>{
       'player': FirebaseAuth.instance.currentUser!.displayName,
       'partner': null,
-      'game': getUpcomingDay(currentDate, dayOfWeek)
+      'game': getUpcomingDayAsString(currentDate, dayOfWeek)
     }); // FirebaseFirestore
   } 
 
-  String getUpcomingDay(DateTime today, int dayOfWeek) {
+  DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
+    while (today.weekday != dayOfWeek) {
+      today = today.add(const Duration(days: 1));
+    }
+    return today;
+  }
+
+  String getUpcomingDayAsString(DateTime today, int dayOfWeek) {
     String? weekdayName;
     String? monthName;
     int date;
@@ -91,15 +98,12 @@ class ApplicationState extends ChangeNotifier {
     12: 'December',
   };
 
-    // Tuesdays are 2, Thursdays are 4
-    while (today.weekday != dayOfWeek) {
-      today = today.add(const Duration(days: 1));
-    }
+    DateTime gameDay = getUpcomingDay(today, dayOfWeek);
 
     weekdayName = dayMap[dayOfWeek];
-    monthName = monthMap[today.month];
-    year = today.year;
-    date = today.day;
+    monthName = monthMap[gameDay.month];
+    year = gameDay.year;
+    date = gameDay.day;
 
     return "$weekdayName, $monthName $date $year $time";
   }
