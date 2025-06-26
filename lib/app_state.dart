@@ -19,6 +19,7 @@ class ApplicationState extends ChangeNotifier {
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
+  DateTime get currentDate => DateTime.now();
 
   // Funtions
   Future<void> init() async {
@@ -28,7 +29,6 @@ class ApplicationState extends ChangeNotifier {
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
-    // There's a lot going on here, so you should explore it in a debugger to inspect what happens to get a clearer mental model.
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
@@ -46,7 +46,7 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
-  Future<DocumentReference> addPlayerToPartnershipDesk() {
+  Future<DocumentReference> addPlayerLookingForPartner(int dayOfWeek) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
@@ -54,9 +54,53 @@ class ApplicationState extends ChangeNotifier {
     return FirebaseFirestore.instance
     .collection('partnershipdesk')
     .add(<String, dynamic>{
-      'username': FirebaseAuth.instance.currentUser!.displayName,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'userID': FirebaseAuth.instance.currentUser!.uid,
+      'player': FirebaseAuth.instance.currentUser!.displayName,
+      'partner': null,
+      'game': getUpcomingDay(currentDate, dayOfWeek)
     }); // FirebaseFirestore
   } 
+
+  String getUpcomingDay(DateTime today, int dayOfWeek) {
+    String? weekdayName;
+    String? monthName;
+    int date;
+    int year;
+    String time = '6:45pm';
+    final Map<int, String> dayMap = {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    7: 'Sunday',
+  };
+
+  final Map<int, String> monthMap = {
+    1: 'January',
+    2: 'February',
+    3: 'March',
+    4: 'April',
+    5: 'May',
+    6: 'June',
+    7: 'July',
+    8: 'August',
+    9: 'September',
+    10: 'October',
+    11: 'November',
+    12: 'December',
+  };
+
+    // Tuesdays are 2, Thursdays are 4
+    while (today.weekday != dayOfWeek) {
+      today = today.add(const Duration(days: 1));
+    }
+
+    weekdayName = dayMap[dayOfWeek];
+    monthName = monthMap[today.month];
+    year = today.year;
+    date = today.day;
+
+    return "$weekdayName, $monthName $date $year $time";
+  }
 }
