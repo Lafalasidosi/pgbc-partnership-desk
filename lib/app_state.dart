@@ -56,9 +56,29 @@ class ApplicationState extends ChangeNotifier {
     .add(<String, dynamic>{
       'player': FirebaseAuth.instance.currentUser!.displayName,
       'partner': null,
-      'game': getUpcomingDayAsString(currentDate, dayOfWeek)
+      'game': getUpcomingDayAsString(dayOfWeek)
     }); // FirebaseFirestore
   } 
+
+  void deregister() {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+
+    String? name = FirebaseAuth.instance.currentUser!.displayName;
+
+    var query = FirebaseFirestore.instance
+                .collection('partnershipdesk')
+                .where('player', isEqualTo: name)
+                .get().then(
+                  (event) {
+                    for (final doc in event.docs) {
+                      doc.reference.delete();
+                    }
+                  }
+                );
+
+  }
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
     while (today.weekday != dayOfWeek) {
@@ -67,7 +87,8 @@ class ApplicationState extends ChangeNotifier {
     return today;
   }
 
-  String getUpcomingDayAsString(DateTime today, int dayOfWeek) {
+  String getUpcomingDayAsString(int dayOfWeek) {
+    DateTime today = DateTime.now();
     String? weekdayName;
     String? monthName;
     int date;
