@@ -16,9 +16,9 @@ class PartnershipDesk extends StatefulWidget {
   });
 
   final bool loggedIn;
-  final FutureOr<void> Function(int) registerForPartner;
+  final FutureOr<void> Function(String, int) registerForPartner;
   final FutureOr<void> Function() deregisterForPartner;
-  final FutureOr<void> Function(int, String) registerWithPartner;
+  final FutureOr<void> Function(String, String) registerWithPartner;
   final String upcomingGameDate;
 
   @override
@@ -47,7 +47,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
                 onPressed: () async {
-                  await widget.registerForPartner(2);
+                  await widget.registerForPartner(widget.upcomingGameDate, 2);
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(
@@ -75,7 +75,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
                 onPressed: () async {
-                  await widget.registerWithPartner(2, _controller.text);
+                  await widget.registerWithPartner(widget.upcomingGameDate, _controller.text);
                   _controller.clear();
                 },
                 style: ButtonStyle(

@@ -46,7 +46,10 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
-  Future<void> addPlayerLookingForPartner(int dayOfWeek) {
+  Future<void> addPlayerLookingForPartner(String gameTime, int dayOfWeek) {
+    /* Check first if player is already registered for a particular game
+    */
+
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
@@ -56,11 +59,11 @@ class ApplicationState extends ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.displayName)
         .set(<String, dynamic>{
           'partner': null,
-          'game': getUpcomingDayAsString(dayOfWeek),
+          'game': gameTime,
         }); // FirebaseFirestore
   }
 
-  Future<void> addPlayerWithPartner(int dayOfWeek, String pname) {
+  Future<void> addPlayerWithPartner(String gameTime, String pname) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
@@ -70,7 +73,7 @@ class ApplicationState extends ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser!.displayName)
         .set(<String, dynamic>{
           'partner': pname,
-          'game': getUpcomingDayAsString(dayOfWeek),
+          'game': gameTime,
         });
   }
 
