@@ -20,6 +20,7 @@ class ApplicationState extends ChangeNotifier {
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   DateTime get currentDate => DateTime.now();
+  String collectionName = 'partnershipdesk';
 
   // Funtions
   Future<void> init() async {
@@ -52,13 +53,27 @@ class ApplicationState extends ChangeNotifier {
     }
 
     return FirebaseFirestore.instance
-    .collection('partnershipdesk')
+    .collection(collectionName)
     .add(<String, dynamic>{
       'player': FirebaseAuth.instance.currentUser!.displayName,
       'partner': null,
       'game': getUpcomingDayAsString(dayOfWeek)
     }); // FirebaseFirestore
   } 
+
+  Future<DocumentReference> addPlayerWithPartner(int dayOfWeek, String pname) {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+
+    return FirebaseFirestore.instance
+          .collection(collectionName)
+          .add(<String, dynamic>{
+            'player': FirebaseAuth.instance.currentUser!.displayName,
+            'partner': pname,
+            'game': getUpcomingDayAsString(dayOfWeek)
+          });
+  }
 
   void deregister() {
     if (!_loggedIn) {

@@ -51,6 +51,7 @@ class HomePage extends StatelessWidget {
                       child: PartnershipDesk(
                         registerForPartner: (dayOfWeek) => appState.addPlayerLookingForPartner(dayOfWeek), 
                         deregisterForPartner: () => appState.deregister(), 
+                        registerWithPartner: (dayOfWeek, pname) => appState.addPlayerWithPartner(dayOfWeek, pname),
                         upcomingGameDate: appState.getUpcomingDayAsString(2))
                     ),
           ),
