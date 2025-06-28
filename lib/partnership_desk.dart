@@ -39,7 +39,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             padding: EdgeInsets.all(2),
             child: ElevatedButton(
               onPressed: () async {
-                await widget.registerForPartner(2);
+                await widget.registerForPartner(2); // what if you have more than one session in a day?
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(
