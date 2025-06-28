@@ -49,6 +49,7 @@ class HomePage extends StatelessWidget {
                     Visibility(
                       visible: appState.loggedIn,
                       child: PartnershipDesk(
+                        loggedIn: appState.loggedIn,
                         registerForPartner: (dayOfWeek) => appState.addPlayerLookingForPartner(dayOfWeek), 
                         deregisterForPartner: () => appState.deregister(), 
                         registerWithPartner: (dayOfWeek, pname) => appState.addPlayerWithPartner(dayOfWeek, pname),

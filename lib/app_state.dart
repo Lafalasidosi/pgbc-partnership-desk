@@ -47,29 +47,29 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
-  Future<DocumentReference> addPlayerLookingForPartner(int dayOfWeek) {
+  Future<void> addPlayerLookingForPartner(int dayOfWeek) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
     return FirebaseFirestore.instance
     .collection(collectionName)
-    .add(<String, dynamic>{
-      'player': FirebaseAuth.instance.currentUser!.displayName,
+    .doc(FirebaseAuth.instance.currentUser!.displayName)
+    .set(<String, dynamic>{
       'partner': null,
       'game': getUpcomingDayAsString(dayOfWeek)
     }); // FirebaseFirestore
   } 
 
-  Future<DocumentReference> addPlayerWithPartner(int dayOfWeek, String pname) {
+  Future<void> addPlayerWithPartner(int dayOfWeek, String pname) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
     return FirebaseFirestore.instance
           .collection(collectionName)
-          .add(<String, dynamic>{
-            'player': FirebaseAuth.instance.currentUser!.displayName,
+          .doc(FirebaseAuth.instance.currentUser!.displayName)
+          .set(<String, dynamic>{
             'partner': pname,
             'game': getUpcomingDayAsString(dayOfWeek)
           });
@@ -84,14 +84,8 @@ class ApplicationState extends ChangeNotifier {
 
     var query = FirebaseFirestore.instance
                 .collection('partnershipdesk')
-                .where('player', isEqualTo: name)
-                .get().then(
-                  (event) {
-                    for (final doc in event.docs) {
-                      doc.reference.delete();
-                    }
-                  }
-                );
+                .doc(FirebaseAuth.instance.currentUser!.displayName)
+                .delete();
 
   }
 

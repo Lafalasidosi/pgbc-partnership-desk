@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'src/widgets.dart';
@@ -7,12 +8,14 @@ import 'src/widgets.dart';
 class PartnershipDesk extends StatefulWidget {
   PartnershipDesk({
     super.key,
+    required this.loggedIn,
     required this.registerForPartner,
     required this.deregisterForPartner,
     required this.registerWithPartner,
     required this.upcomingGameDate,
   });
 
+  final bool loggedIn;
   final FutureOr<void> Function(int) registerForPartner;
   final FutureOr<void> Function() deregisterForPartner;
   final FutureOr<void> Function(int, String) registerWithPartner;
@@ -25,6 +28,8 @@ class PartnershipDesk extends StatefulWidget {
 class _PartnershipDeskState extends State<PartnershipDesk> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_PartnershipDeskState');
   final _controller = TextEditingController();
+  final db = FirebaseFirestore.instance.collection('partnershipdesk');
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +83,24 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
                 ),
                 child: Text('I have a partner.'),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(2),
+              child: ElevatedButton(
+                onPressed: () async {
+                  await widget.deregisterForPartner();
+                  setState(() {
+                    
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                    Color.fromARGB(187, 126, 3, 240),
+                  ),
+                  foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
+                ),
+                child: Text('Unregister'),
               ),
             ),
           ],
