@@ -91,6 +91,18 @@ class ApplicationState extends ChangeNotifier {
     player.delete();
   }
 
+  Future<bool> isRegistered(String gameTime, String name) async {
+    Query registration = FirebaseFirestore.instance.collection(collectionName)
+                        .where('game', isEqualTo: gameTime)
+                        .where('name', isEqualTo: name);
+
+    QuerySnapshot qs = await registration.get();
+    if (qs.docs.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
     while (today.weekday != dayOfWeek) {
       today = today.add(const Duration(days: 1));
