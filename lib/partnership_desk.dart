@@ -30,7 +30,6 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   final _controller = TextEditingController();
   final db = FirebaseFirestore.instance.collection('partnershipdesk');
 
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -93,9 +92,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               child: ElevatedButton(
                 onPressed: () async {
                   await widget.deregisterForPartner();
-                  setState(() {
-                    
-                  });
+                  setState(() {});
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(
