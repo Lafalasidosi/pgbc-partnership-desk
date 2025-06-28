@@ -46,7 +46,7 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
-  Future<void> addPlayerLookingForPartner(String gameTime, int dayOfWeek) {
+  Future<void> addPlayerLookingForPartner(String gameTime) {
     /* Check first if player is already registered for a particular game
     */
 
