@@ -59,15 +59,18 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                 child: Text('I need a partner'),
               ),
             ),
-            TextFormField(
-              controller: _controller,
-              decoration: InputDecoration(helperText: 'Partner\'s name'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Enter your partner\'s name, please.';
-                }
-                return null;
-              },
+            Padding(
+              padding: EdgeInsetsDirectional.only(start: 30, end: 30),
+              child: TextFormField(
+                controller: _controller,
+                decoration: InputDecoration(helperText: 'Partner\'s name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter your partner\'s name, please.';
+                  }
+                  return null;
+                },
+              ),
             ),
             Padding(
               padding: EdgeInsets.all(2),
