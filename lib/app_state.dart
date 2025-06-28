@@ -79,14 +79,13 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('You must be logged in to do that!');
     }
 
-    String? name = FirebaseAuth.instance.currentUser!.displayName;
-    String? partner;
+    String name = FirebaseAuth.instance.currentUser!.displayName!;
+    String? partnerName;
 
-    DocumentReference<Map<String, dynamic>> query = FirebaseFirestore.instance
-        .collection('partnershipdesk')
-        .doc(FirebaseAuth.instance.currentUser!.displayName);
+    var player = FirebaseFirestore.instance.collection(collectionName)
+                  .doc(name);
 
-    query.delete();
+    player.delete();
   }
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
