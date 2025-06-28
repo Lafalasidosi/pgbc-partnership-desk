@@ -75,18 +75,19 @@ class ApplicationState extends ChangeNotifier {
           });
   }
 
-  void deregister() {
+  void deregister() async {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
     String? name = FirebaseAuth.instance.currentUser!.displayName;
+    String? partner;
 
-    var query = FirebaseFirestore.instance
-                .collection('partnershipdesk')
-                .doc(FirebaseAuth.instance.currentUser!.displayName)
-                .delete();
-
+    DocumentReference<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('partnershipdesk')
+        .doc(FirebaseAuth.instance.currentUser!.displayName);
+    
+    query.delete();
   }
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
