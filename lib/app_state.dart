@@ -20,6 +20,7 @@ class ApplicationState extends ChangeNotifier {
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   DateTime get currentDate => DateTime.now();
+  String collectionName = 'partnershipdesk';
 
   // Funtions
   Future<void> init() async {
@@ -35,8 +36,7 @@ class ApplicationState extends ChangeNotifier {
         _partnershipDeskSubscription = FirebaseFirestore.instance
             .collection('partnershipdesk')
             .snapshots()
-            .listen((snapshot) {
-            });
+            .listen((snapshot) {});
         notifyListeners();
       } else {
         _loggedIn = false;
@@ -46,38 +46,46 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
-  Future<DocumentReference> addPlayerLookingForPartner(int dayOfWeek) {
+  Future<void> addPlayerLookingForPartner(int dayOfWeek) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
     return FirebaseFirestore.instance
-    .collection('partnershipdesk')
-    .add(<String, dynamic>{
-      'player': FirebaseAuth.instance.currentUser!.displayName,
-      'partner': null,
-      'game': getUpcomingDayAsString(dayOfWeek)
-    }); // FirebaseFirestore
-  } 
+        .collection(collectionName)
+        .doc(FirebaseAuth.instance.currentUser!.displayName)
+        .set(<String, dynamic>{
+          'partner': null,
+          'game': getUpcomingDayAsString(dayOfWeek),
+        }); // FirebaseFirestore
+  }
 
-  void deregister() {
+  Future<void> addPlayerWithPartner(int dayOfWeek, String pname) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
-    String? name = FirebaseAuth.instance.currentUser!.displayName;
+    return FirebaseFirestore.instance
+        .collection(collectionName)
+        .doc(FirebaseAuth.instance.currentUser!.displayName)
+        .set(<String, dynamic>{
+          'partner': pname,
+          'game': getUpcomingDayAsString(dayOfWeek),
+        });
+  }
 
-    var query = FirebaseFirestore.instance
-                .collection('partnershipdesk')
-                .where('player', isEqualTo: name)
-                .get().then(
-                  (event) {
-                    for (final doc in event.docs) {
-                      doc.reference.delete();
-                    }
-                  }
-                );
+  void deregister() async {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
 
+    String name = FirebaseAuth.instance.currentUser!.displayName!;
+    String? partnerName;
+
+    var player = FirebaseFirestore.instance.collection(collectionName)
+                  .doc(name);
+
+    player.delete();
   }
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
@@ -95,29 +103,29 @@ class ApplicationState extends ChangeNotifier {
     int year;
     String time = '6:45pm';
     final Map<int, String> dayMap = {
-    1: 'Monday',
-    2: 'Tuesday',
-    3: 'Wednesday',
-    4: 'Thursday',
-    5: 'Friday',
-    6: 'Saturday',
-    7: 'Sunday',
-  };
+      1: 'Monday',
+      2: 'Tuesday',
+      3: 'Wednesday',
+      4: 'Thursday',
+      5: 'Friday',
+      6: 'Saturday',
+      7: 'Sunday',
+    };
 
-  final Map<int, String> monthMap = {
-    1: 'January',
-    2: 'February',
-    3: 'March',
-    4: 'April',
-    5: 'May',
-    6: 'June',
-    7: 'July',
-    8: 'August',
-    9: 'September',
-    10: 'October',
-    11: 'November',
-    12: 'December',
-  };
+    final Map<int, String> monthMap = {
+      1: 'January',
+      2: 'February',
+      3: 'March',
+      4: 'April',
+      5: 'May',
+      6: 'June',
+      7: 'July',
+      8: 'August',
+      9: 'September',
+      10: 'October',
+      11: 'November',
+      12: 'December',
+    };
 
     DateTime gameDay = getUpcomingDay(today, dayOfWeek);
 
