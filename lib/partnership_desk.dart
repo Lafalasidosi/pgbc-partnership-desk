@@ -54,7 +54,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
+                  backgroundColor: WidgetStatePropertyAll( registered ? Color.fromARGB(186, 90, 86, 93) :
                     Color.fromARGB(187, 126, 3, 240),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
@@ -78,12 +78,12 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             Padding(
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
-                onPressed: () async {
+                onPressed: registered ? null : () async {
                   await widget.registerWithPartner(widget.upcomingGameDate, _controller.text);
                   _controller.clear();
                 },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
+                  backgroundColor: WidgetStatePropertyAll( registered ? Color.fromARGB(186, 90, 86, 93) :
                     Color.fromARGB(187, 126, 3, 240),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
@@ -101,8 +101,8 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                   });
                 },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    Color.fromARGB(187, 126, 3, 240),
+                  backgroundColor: WidgetStatePropertyAll( !registered ? Color.fromARGB(186, 90, 86, 93) :
+                    Color.fromARGB(186, 230, 18, 18),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
                 ),
