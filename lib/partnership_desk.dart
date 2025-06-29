@@ -29,6 +29,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_PartnershipDeskState');
   final _controller = TextEditingController();
   final db = FirebaseFirestore.instance.collection('partnershipdesk');
+  bool registered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +47,11 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             Padding(
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
-                onPressed: () async {
+                onPressed: registered? null : () async {
                   await widget.registerForPartner(widget.upcomingGameDate);
+                  setState(() {
+                    registered = true;
+                  });
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(
@@ -92,7 +96,9 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               child: ElevatedButton(
                 onPressed: () async {
                   await widget.deregisterForPartner();
-                  setState(() {});
+                  setState(() {
+                    registered = false;
+                  });
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(
