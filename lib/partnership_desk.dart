@@ -89,21 +89,13 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             Padding(
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
-                onPressed:
-                    registered
-                        ? null
-                        : () async {
-                          if (_formKey.currentState!.validate()) {
-                            await widget.registerWithPartner(
-                              widget.upcomingGameDate,
-                              _controller.text,
-                            );
-                            _controller.clear();
-                            setState(() {
-                              registered = true;
-                            });
-                          }
-                        },
+                onPressed: registered ? null : () async {
+                  await widget.registerWithPartner(widget.upcomingGameDate, _controller.text);
+                  _controller.clear();
+                  setState(() {
+                    registered = true;
+                  });
+                },
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(
                     registered
