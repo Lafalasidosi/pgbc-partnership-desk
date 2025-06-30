@@ -3,24 +3,20 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'src/widgets.dart';
-
 class PartnershipDesk extends StatefulWidget {
-  PartnershipDesk({
+  const PartnershipDesk({
     super.key,
     required this.loggedIn,
     required this.registerForPartner,
     required this.deregisterForPartner,
     required this.registerWithPartner,
     required this.upcomingGameDate,
-    required this.isRegistered,
   });
 
   final bool loggedIn;
   final FutureOr<void> Function(String) registerForPartner;
   final FutureOr<void> Function() deregisterForPartner;
   final FutureOr<void> Function(String, String) registerWithPartner;
-  final FutureOr<bool> Function(String, String) isRegistered;
   final String upcomingGameDate;
 
   @override
@@ -32,7 +28,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   final _controller = TextEditingController();
   final db = FirebaseFirestore.instance.collection('partnershipdesk');
   bool registered = false;
-  bool _validate = false;
+  final bool _validate = false;
   bool get validate => _validate;
 
   @override
@@ -89,13 +85,21 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             Padding(
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
-                onPressed: registered ? null : () async {
-                  await widget.registerWithPartner(widget.upcomingGameDate, _controller.text);
-                  _controller.clear();
-                  setState(() {
-                    registered = true;
-                  });
-                },
+                onPressed:
+                    registered
+                        ? null
+                        : () async {
+                          if (_formKey.currentState!.validate()) {
+                            await widget.registerWithPartner(
+                              widget.upcomingGameDate,
+                              _controller.text,
+                            );
+                            _controller.clear();
+                            setState(() {
+                              registered = true;
+                            });
+                          }
+                        },
                 style: ButtonStyle(
                   backgroundColor: WidgetStatePropertyAll(
                     registered
