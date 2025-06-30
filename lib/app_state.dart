@@ -76,7 +76,7 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('You must be logged in to do that!');
     }
 
-    String? name = FirebaseAuth.instance.currentUser!.displayName;
+    String? name = FirebaseAuth.instance.currentUser!.displayName; // ought these become user IDs instead?
 
     return FirebaseFirestore.instance.collection(collectionName).add(
       <String, dynamic>{'name': name, 'partner': pname, 'game': gameTime},
