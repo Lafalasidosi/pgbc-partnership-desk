@@ -32,6 +32,8 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   final _controller = TextEditingController();
   final db = FirebaseFirestore.instance.collection('partnershipdesk');
   bool registered = false;
+  bool _validate = false;
+  bool get validate => _validate;
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +51,22 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             Padding(
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
-                onPressed: registered? null : () async {
-                  await widget.registerForPartner(widget.upcomingGameDate);
-                  setState(() {
-                    registered = true;
-                  });
-                },
+                onPressed:
+                    registered
+                        ? null
+                        : () async {
+                          await widget.registerForPartner(
+                            widget.upcomingGameDate,
+                          );
+                          setState(() {
+                            registered = true;
+                          });
+                        },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll( registered ? Color.fromARGB(186, 90, 86, 93) :
-                    Color.fromARGB(187, 126, 3, 240),
+                  backgroundColor: WidgetStatePropertyAll(
+                    registered
+                        ? Color.fromARGB(186, 90, 86, 93)
+                        : Color.fromARGB(187, 126, 3, 240),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
                 ),
@@ -80,16 +89,26 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             Padding(
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
-                onPressed: registered ? null : () async {
-                  await widget.registerWithPartner(widget.upcomingGameDate, _controller.text);
-                  _controller.clear();
-                  setState(() {
-                    registered = true;
-                  });
-                },
+                onPressed:
+                    registered
+                        ? null
+                        : () async {
+                          if (_formKey.currentState!.validate()) {
+                            await widget.registerWithPartner(
+                              widget.upcomingGameDate,
+                              _controller.text,
+                            );
+                            _controller.clear();
+                            setState(() {
+                              registered = true;
+                            });
+                          }
+                        },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll( registered ? Color.fromARGB(186, 90, 86, 93) :
-                    Color.fromARGB(187, 126, 3, 240),
+                  backgroundColor: WidgetStatePropertyAll(
+                    registered
+                        ? Color.fromARGB(186, 90, 86, 93)
+                        : Color.fromARGB(187, 126, 3, 240),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
                 ),
@@ -99,15 +118,20 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             Padding(
               padding: EdgeInsets.all(2),
               child: ElevatedButton(
-                onPressed: !registered ? null : () async {
-                  await widget.deregisterForPartner();
-                  setState(() {
-                    registered = false;
-                  });
-                },
+                onPressed:
+                    !registered
+                        ? null
+                        : () async {
+                          await widget.deregisterForPartner();
+                          setState(() {
+                            registered = false;
+                          });
+                        },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll( !registered ? Color.fromARGB(186, 90, 86, 93) :
-                    Color.fromARGB(186, 230, 18, 18),
+                  backgroundColor: WidgetStatePropertyAll(
+                    !registered
+                        ? Color.fromARGB(186, 90, 86, 93)
+                        : Color.fromARGB(186, 230, 18, 18),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
                 ),
