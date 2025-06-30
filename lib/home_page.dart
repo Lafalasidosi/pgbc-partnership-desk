@@ -3,12 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdv0/partnership_desk.dart';
-import 'package:pdv0/src/registration_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
 import 'src/authentication.dart';
-import 'src/widgets.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -57,7 +55,6 @@ class HomePage extends StatelessWidget {
                         (gameTime, pname) =>
                             appState.addPlayerWithPartner(gameTime, pname),
                     upcomingGameDate: appState.getUpcomingDayAsString(2),
-                    isRegistered: (gameTime, name) => appState.isRegistered(gameTime, name),
                   ),
                 ),
           ),
