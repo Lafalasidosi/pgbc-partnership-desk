@@ -78,6 +78,9 @@ class ApplicationState extends ChangeNotifier {
 
     String? name = FirebaseAuth.instance.currentUser!.displayName; // ought these become user IDs instead?
 
+    FirebaseFirestore.instance.collection(collectionName).add(
+      <String, dynamic>{'name': pname, 'partner': name, 'game': gameTime},);
+
     return FirebaseFirestore.instance.collection(collectionName).add(
       <String, dynamic>{'name': name, 'partner': pname, 'game': gameTime},
     );
@@ -108,7 +111,7 @@ class ApplicationState extends ChangeNotifier {
 
     await registration.get().then((snapshot) {
       for (var x in snapshot.docs) {
-        x.reference.set({'partner': null});
+        x.reference.update({'partner': null});
       }
     });
   }
