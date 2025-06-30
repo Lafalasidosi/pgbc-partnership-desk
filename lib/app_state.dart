@@ -90,9 +90,9 @@ class ApplicationState extends ChangeNotifier {
     );
   }
 
+  /// Delete a user's registration at his request, updating his or her
+  /// partner's registration to "looking for partner", if it exists.
   void deregister() async {
-    /// Delete a user's registration at his request, updating his or her
-    /// partner's registration to "looking for partner", if it exists.
 
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
