@@ -46,52 +46,7 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
-  Future<void> addPlayerLookingForPartner(String gameTime) {
-    /* Check first if player is already registered for a particular game
-    */
-
-    if (!_loggedIn) {
-      throw Exception('You must be logged in to do that!');
-    }
-
-    return FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(FirebaseAuth.instance.currentUser!.displayName)
-        .set(<String, dynamic>{
-          'partner': null,
-          'game': gameTime,
-        }); // FirebaseFirestore
-  }
-
-  Future<void> addPlayerWithPartner(String gameTime, String pname) {
-    if (!_loggedIn) {
-      throw Exception('You must be logged in to do that!');
-    }
-
-    return FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(FirebaseAuth.instance.currentUser!.displayName)
-        .set(<String, dynamic>{
-          'partner': pname,
-          'game': gameTime,
-        });
-  }
-
-  void deregister() async {
-    if (!_loggedIn) {
-      throw Exception('You must be logged in to do that!');
-    }
-
-    String name = FirebaseAuth.instance.currentUser!.displayName!;
-    String? partnerName;
-
-    var player = FirebaseFirestore.instance.collection(collectionName)
-                  .doc(name);
-
-    player.delete();
-  }
-
-  Future<bool> isRegistered(String gameTime, String name) async {
+Future<bool> isRegistered(String gameTime, String name) async {
     Query registration = FirebaseFirestore.instance.collection(collectionName)
                         .where('game', isEqualTo: gameTime)
                         .where('name', isEqualTo: name);
@@ -102,6 +57,58 @@ class ApplicationState extends ChangeNotifier {
     }
     return true;
   }
+
+
+  Future<void> addPlayerLookingForPartner(String gameTime) async {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+
+    bool registered;
+    String? name = FirebaseAuth.instance.currentUser!.displayName;
+
+    Query registration = FirebaseFirestore.instance
+        .collection(collectionName)
+        .where('game', isEqualTo: gameTime)
+        .where('name', isEqualTo: name);
+    QuerySnapshot qs = await registration.get();
+    if (qs.docs.isEmpty) {
+      FirebaseFirestore.instance
+          .collection(collectionName)
+          .add(<String, dynamic>{
+            'name': FirebaseAuth.instance.currentUser!.displayName,
+            'partner': null,
+            'game': gameTime,
+          });
+    } // FirebaseFirestore
+  }
+
+  Future<void> addPlayerWithPartner(String gameTime, String pname) {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+
+    return FirebaseFirestore.instance
+        .collection(collectionName)
+        .add(<String, dynamic>{
+          'player': FirebaseAuth.instance.currentUser!.displayName,
+          'partner': pname,
+          'game': gameTime,
+        });
+  }
+
+  void deregister() async {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+    String name = FirebaseAuth.instance.currentUser!.displayName!;
+    String? partnerName;
+
+    // var registration = FirebaseFirestore.instance.collection(collectionName)
+    //               .where();
+
+  }
+
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
     while (today.weekday != dayOfWeek) {

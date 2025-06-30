@@ -13,12 +13,14 @@ class PartnershipDesk extends StatefulWidget {
     required this.deregisterForPartner,
     required this.registerWithPartner,
     required this.upcomingGameDate,
+    required this.isRegistered,
   });
 
   final bool loggedIn;
   final FutureOr<void> Function(String) registerForPartner;
   final FutureOr<void> Function() deregisterForPartner;
   final FutureOr<void> Function(String, String) registerWithPartner;
+  final FutureOr<bool> Function(String, String) isRegistered;
   final String upcomingGameDate;
 
   @override
