@@ -46,33 +46,21 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
-Future<bool> isRegistered(String gameTime, String name) async {
-    Query registration = FirebaseFirestore.instance.collection(collectionName)
-                        .where('game', isEqualTo: gameTime)
-                        .where('name', isEqualTo: name);
-
-    QuerySnapshot qs = await registration.get();
-    if (qs.docs.isEmpty) {
-      return false;
-    }
-    return true;
-  }
-
-
   Future<void> addPlayerLookingForPartner(String gameTime) async {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
-    bool registered;
     String? name = FirebaseAuth.instance.currentUser!.displayName;
 
-    Query registration = FirebaseFirestore.instance
-        .collection(collectionName)
-        .where('game', isEqualTo: gameTime)
-        .where('name', isEqualTo: name);
-    QuerySnapshot qs = await registration.get();
-    if (qs.docs.isEmpty) {
+    QuerySnapshot registration =
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .where('game', isEqualTo: gameTime)
+            .where('name', isEqualTo: name)
+            .get();
+
+    if (registration.docs.isEmpty) {
       FirebaseFirestore.instance
           .collection(collectionName)
           .add(<String, dynamic>{
@@ -88,13 +76,11 @@ Future<bool> isRegistered(String gameTime, String name) async {
       throw Exception('You must be logged in to do that!');
     }
 
-    return FirebaseFirestore.instance
-        .collection(collectionName)
-        .add(<String, dynamic>{
-          'name': FirebaseAuth.instance.currentUser!.displayName,
-          'partner': pname,
-          'game': gameTime,
-        });
+    String? name = FirebaseAuth.instance.currentUser!.displayName;
+
+    return FirebaseFirestore.instance.collection(collectionName).add(
+      <String, dynamic>{'name': name, 'partner': pname, 'game': gameTime},
+    );
   }
 
   void deregister() async {
@@ -102,18 +88,30 @@ Future<bool> isRegistered(String gameTime, String name) async {
       throw Exception('You must be logged in to do that!');
     }
     String name = FirebaseAuth.instance.currentUser!.displayName!;
-    String? partnerName;
 
-    var registration = FirebaseFirestore.instance.collection(collectionName)
-                  .where('name', isEqualTo: name);
+    // delete calling user's registration
+    var registration = FirebaseFirestore.instance
+        .collection(collectionName)
+        .where('name', isEqualTo: name);
 
+    // amend calling user's partner's registration, if any
     await registration.get().then((snapshot) {
       for (var x in snapshot.docs) {
         x.reference.delete();
       }
     });
-  }
 
+    // if calling user had a partner, update that partner's registration
+    registration = FirebaseFirestore.instance
+        .collection(collectionName)
+        .where('partner', isEqualTo: name);
+
+    await registration.get().then((snapshot) {
+      for (var x in snapshot.docs) {
+        x.reference.set({'partner': null});
+      }
+    });
+  }
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
     while (today.weekday != dayOfWeek) {
