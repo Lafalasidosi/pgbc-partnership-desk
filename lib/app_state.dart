@@ -91,7 +91,7 @@ Future<bool> isRegistered(String gameTime, String name) async {
     return FirebaseFirestore.instance
         .collection(collectionName)
         .add(<String, dynamic>{
-          'player': FirebaseAuth.instance.currentUser!.displayName,
+          'name': FirebaseAuth.instance.currentUser!.displayName,
           'partner': pname,
           'game': gameTime,
         });
@@ -104,9 +104,14 @@ Future<bool> isRegistered(String gameTime, String name) async {
     String name = FirebaseAuth.instance.currentUser!.displayName!;
     String? partnerName;
 
-    // var registration = FirebaseFirestore.instance.collection(collectionName)
-    //               .where();
+    var registration = FirebaseFirestore.instance.collection(collectionName)
+                  .where('name', isEqualTo: name);
 
+    await registration.get().then((snapshot) {
+      for (var x in snapshot.docs) {
+        x.reference.delete();
+      }
+    });
   }
 
 
