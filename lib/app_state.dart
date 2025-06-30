@@ -10,19 +10,16 @@ import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 
 class ApplicationState extends ChangeNotifier {
-  // Constructor
   ApplicationState() {
     init();
   }
 
-  // Member variables
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   DateTime get currentDate => DateTime.now();
   String collectionName = 'partnershipdesk';
 
-  // Funtions
   Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -76,10 +73,17 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('You must be logged in to do that!');
     }
 
-    String? name = FirebaseAuth.instance.currentUser!.displayName; // ought these become user IDs instead?
+    String? name =
+        FirebaseAuth
+            .instance
+            .currentUser!
+            .displayName; // ought these become user IDs instead?
 
-    FirebaseFirestore.instance.collection(collectionName).add(
-      <String, dynamic>{'name': pname, 'partner': name, 'game': gameTime},);
+    FirebaseFirestore.instance.collection(collectionName).add(<String, dynamic>{
+      'name': pname,
+      'partner': name,
+      'game': gameTime,
+    });
 
     return FirebaseFirestore.instance.collection(collectionName).add(
       <String, dynamic>{'name': name, 'partner': pname, 'game': gameTime},
@@ -87,24 +91,25 @@ class ApplicationState extends ChangeNotifier {
   }
 
   void deregister() async {
+    /// Delete a user's registration at his request, updating his or her
+    /// partner's registration to "looking for partner", if it exists.
+
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
+
     String name = FirebaseAuth.instance.currentUser!.displayName!;
 
-    // delete calling user's registration
     var registration = FirebaseFirestore.instance
         .collection(collectionName)
         .where('name', isEqualTo: name);
 
-    // amend calling user's partner's registration, if any
     await registration.get().then((snapshot) {
       for (var x in snapshot.docs) {
         x.reference.delete();
       }
     });
 
-    // if calling user had a partner, update that partner's registration
     registration = FirebaseFirestore.instance
         .collection(collectionName)
         .where('partner', isEqualTo: name);
@@ -124,6 +129,8 @@ class ApplicationState extends ChangeNotifier {
   }
 
   String getUpcomingDayAsString(int dayOfWeek) {
+    /// This method and `getUpcomingDay` are currently pretty hard-coded.
+
     DateTime today = DateTime.now();
     String? weekdayName;
     String? monthName;
