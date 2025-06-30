@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'home_page.dart';
 import 'app_state.dart';
@@ -62,8 +60,9 @@ final _router = GoRouter(
                     _ => null,
                   };
                   if (user == null) return;
-                  if (state is UserCreated)
+                  if (state is UserCreated) {
                     user.updateDisplayName(user.email!.split('@')[0]);
+                  }
                   if (!user.emailVerified) {
                     user.sendEmailVerification();
                     const snackBar = SnackBar(
