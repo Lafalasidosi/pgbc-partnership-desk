@@ -45,17 +45,21 @@ class HomePage extends StatelessWidget {
             builder:
                 (context, appState, _) => Visibility(
                   visible: appState.loggedIn,
-                  child: PartnershipDesk(
-                    loggedIn: appState.loggedIn,
-                    registerForPartner:
-                        (gameTime) =>
-                            appState.addPlayerLookingForPartner(gameTime),
-                    deregisterForPartner: () => appState.deregister(),
-                    registerWithPartner:
-                        (gameTime, pname) =>
-                            appState.addPlayerWithPartner(gameTime, pname),
-                    upcomingGameDate: appState.getUpcomingDayAsString(2),
-                  ),
+                  child: Column(
+                    children: [
+                      PartnershipDesk(
+                        loggedIn: appState.loggedIn,
+                        registerForPartner:
+                            (gameTime) =>
+                                appState.addPlayerLookingForPartner(gameTime),
+                        deregisterForPartner: () => appState.deregister(),
+                        registerWithPartner:
+                            (gameTime, pname) =>
+                                appState.addPlayerWithPartner(gameTime, pname),
+                        upcomingGameDate: appState.getUpcomingDayAsString(2),
+                      ),
+                    ],
+                  )
                 ),
           ),
         ],
