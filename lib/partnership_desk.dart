@@ -138,6 +138,9 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                 child: Text('Unregister'),
               ),
             ),
+            const SizedBox(height: 8),
+            for (var message in widget.registeredPlayers)
+              Text('${message.name}: ${message.partner}\n'),
           ],
         ),
       ),
