@@ -8,6 +8,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+import 'registration.dart';
 
 class ApplicationState extends ChangeNotifier {
   // Constructor
@@ -21,6 +22,8 @@ class ApplicationState extends ChangeNotifier {
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   DateTime get currentDate => DateTime.now();
   String collectionName = 'partnershipdesk';
+  List<Registration> _registeredPlayers = [];
+  List<Registration> get registeredPlayers => _registeredPlayers;
 
   // Funtions
   Future<void> init() async {
@@ -36,7 +39,17 @@ class ApplicationState extends ChangeNotifier {
         _partnershipDeskSubscription = FirebaseFirestore.instance
             .collection('partnershipdesk')
             .snapshots()
-            .listen((snapshot) {});
+            .listen((snapshot) {
+              _registeredPlayers = [];
+              for (final document in snapshot.docs) {
+                _registeredPlayers.add(
+                  Registration(
+                    game: document.get('game'), 
+                    name: document.get('name'),
+                    partner: document.get('partner'))
+                );
+              }
+            });
         notifyListeners();
       } else {
         _loggedIn = false;

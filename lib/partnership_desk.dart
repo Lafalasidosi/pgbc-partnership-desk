@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'registration.dart';
+
 class PartnershipDesk extends StatefulWidget {
   const PartnershipDesk({
     super.key,
@@ -11,6 +13,7 @@ class PartnershipDesk extends StatefulWidget {
     required this.deregisterForPartner,
     required this.registerWithPartner,
     required this.upcomingGameDate,
+    required this.registeredPlayers,
   });
 
   final bool loggedIn;
@@ -18,6 +21,7 @@ class PartnershipDesk extends StatefulWidget {
   final FutureOr<void> Function() deregisterForPartner;
   final FutureOr<void> Function(String, String) registerWithPartner;
   final String upcomingGameDate;
+  final List<Registration> registeredPlayers;
 
   @override
   State<StatefulWidget> createState() => _PartnershipDeskState();

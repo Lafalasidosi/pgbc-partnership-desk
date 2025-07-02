@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pdv0/src/partnership_desk.dart';
+import 'package:pdv0/partnership_desk.dart';
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
@@ -57,6 +57,7 @@ class HomePage extends StatelessWidget {
                             (gameTime, pname) =>
                                 appState.addPlayerWithPartner(gameTime, pname),
                         upcomingGameDate: appState.getUpcomingDayAsString(2),
+                        registeredPlayers: appState.registeredPlayers,
                       ),
                     ],
                   )
