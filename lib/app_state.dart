@@ -49,8 +49,8 @@ class ApplicationState extends ChangeNotifier {
                     partner: document.get('partner'))
                 );
               }
+              notifyListeners();
             });
-        notifyListeners();
       } else {
         _loggedIn = false;
         _partnershipDeskSubscription?.cancel();
