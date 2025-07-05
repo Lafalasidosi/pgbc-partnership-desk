@@ -30,7 +30,6 @@ class PartnershipDesk extends StatefulWidget {
 class _PartnershipDeskState extends State<PartnershipDesk> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_PartnershipDeskState');
   final _controller = TextEditingController();
-  final db = FirebaseFirestore.instance.collection('partnershipdesk');
   bool registered = false;
   final bool _validate = false;
   bool get validate => _validate;
