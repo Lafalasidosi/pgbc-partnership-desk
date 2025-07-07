@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'
+    hide EmailAuthProvider, PhoneAuthProvider;
 
 import 'registration.dart';
 
@@ -36,6 +37,9 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
 
   @override
   Widget build(BuildContext context) {
+    String? userName = FirebaseAuth.instance.currentUser!.displayName!;
+    registered = widget.registeredPlayers.any((entry) => 
+                      entry.name == userName);
     return Form(
       key: _formKey,
       child: Container(
