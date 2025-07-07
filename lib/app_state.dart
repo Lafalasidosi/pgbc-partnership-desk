@@ -45,8 +45,8 @@ class ApplicationState extends ChangeNotifier {
                 _registeredPlayers.add(
                   Registration(
                     game: document.get('game'), 
-                    name: document.get('name'),
-                    partner: document.get('partner'))
+                    player1: document.get('player1'),
+                    player2: document.get('player2'))
                 );
               }
               notifyListeners();
@@ -70,33 +70,29 @@ class ApplicationState extends ChangeNotifier {
         await FirebaseFirestore.instance
             .collection(collectionName)
             .where('game', isEqualTo: gameTime)
-            .where('name', isEqualTo: name)
+            .where('player1', isEqualTo: name)
             .get();
 
     if (registration.docs.isEmpty) {
       FirebaseFirestore.instance
           .collection(collectionName)
           .add(<String, dynamic>{
-            'name': FirebaseAuth.instance.currentUser!.displayName,
-            'partner': null,
+            'player1': FirebaseAuth.instance.currentUser!.displayName,
+            'player2': null,
             'game': gameTime,
           });
     } // FirebaseFirestore
   }
 
-  Future<void> addPlayerWithPartner(String gameTime, String pname) {
+  Future<void> addPlayerWithPartner(String gameTime, String player2) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
-    String? name = FirebaseAuth.instance.currentUser!.displayName; // ought these become user IDs instead?
+    String? player1 = FirebaseAuth.instance.currentUser!.displayName; // ought these become user IDs instead?
 
-    FirebaseFirestore.instance.collection(collectionName).add(
-      <String, dynamic>{'name': pname, 'partner': name, 'game': gameTime},);
-
-    return FirebaseFirestore.instance.collection(collectionName).add(
-      <String, dynamic>{'name': name, 'partner': pname, 'game': gameTime},
-    );
+    return  FirebaseFirestore.instance.collection(collectionName).add(
+      <String, dynamic>{'player1': player1, 'player2': player2, 'game': gameTime},);
   }
 
   void deregister() async {
@@ -108,7 +104,7 @@ class ApplicationState extends ChangeNotifier {
     // delete calling user's registration
     var registration = FirebaseFirestore.instance
         .collection(collectionName)
-        .where('name', isEqualTo: name);
+        .where('player1', isEqualTo: name);
 
     // amend calling user's partner's registration, if any
     await registration.get().then((snapshot) {
@@ -120,11 +116,11 @@ class ApplicationState extends ChangeNotifier {
     // if calling user had a partner, update that partner's registration
     registration = FirebaseFirestore.instance
         .collection(collectionName)
-        .where('partner', isEqualTo: name);
+        .where('player2', isEqualTo: name);
 
     await registration.get().then((snapshot) {
       for (var x in snapshot.docs) {
-        x.reference.update({'partner': null});
+        x.reference.update({'player2': null});
       }
     });
   }

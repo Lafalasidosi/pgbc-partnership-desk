@@ -1,7 +1,7 @@
 class Registration {
-  Registration({required this.game, required this.name, this.partner});
+  Registration({required this.game, required this.player1, this.player2});
 
   String game;
-  String name;
-  String? partner;
+  String player1;
+  String? player2;
 }

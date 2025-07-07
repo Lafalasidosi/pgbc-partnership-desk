@@ -39,7 +39,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   Widget build(BuildContext context) {
     String? userName = FirebaseAuth.instance.currentUser!.displayName!;
     registered = widget.registeredPlayers.any((entry) => 
-                      (entry.name == userName || entry.partner == userName));
+                      (entry.player1 == userName || entry.player2 == userName));
     return Form(
       key: _formKey,
       child: Container(
@@ -142,8 +142,8 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               ),
             ),
             const SizedBox(height: 8),
-            for (var message in widget.registeredPlayers)
-              Text('${message.name}: ${message.partner}\n'),
+            for (var registration in widget.registeredPlayers)
+              Text('${registration.player1}: ${registration.player2}\n'),
           ],
         ),
       ),
