@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
                         registeredPlayers: appState.registeredPlayers,
                       ),
                     ],
-                  )
+                  ),
                 ),
           ),
         ],
