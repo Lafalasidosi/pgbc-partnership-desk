@@ -96,33 +96,36 @@ class ApplicationState extends ChangeNotifier {
   }
 
   void deregister() async {
+    /// Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
     String name = FirebaseAuth.instance.currentUser!.displayName!;
+    String? pname;
+    CollectionReference db = FirebaseFirestore.instance.collection(collectionName);
 
     // delete calling user's registration
-    var registration = FirebaseFirestore.instance
-        .collection(collectionName)
-        .where('player1', isEqualTo: name);
+    var reg_query = db.where(Filter.or(
+          Filter('player1', isEqualTo: name),
+          Filter('player2', isEqualTo: name)
+        ));
 
-    // amend calling user's partner's registration, if any
-    await registration.get().then((snapshot) {
-      for (var x in snapshot.docs) {
-        x.reference.delete();
-      }
-    });
+    QuerySnapshot querySnapshot = await reg_query.get();
 
-    // if calling user had a partner, update that partner's registration
-    registration = FirebaseFirestore.instance
-        .collection(collectionName)
-        .where('player2', isEqualTo: name);
-
-    await registration.get().then((snapshot) {
-      for (var x in snapshot.docs) {
+    for (var x in querySnapshot.docs) {
+      if (x.get('player1') == name) {
+        pname = x.get('player2');
+        if (pname == null) {
+          x.reference.delete();
+        } else {
+          x.reference.update({'player1': pname, 'player2': null});
+        }
+      } else {
         x.reference.update({'player2': null});
       }
-    });
+    }
+
+    
   }
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
