@@ -57,6 +57,8 @@ class ApplicationState extends ChangeNotifier {
     }); // FirebaseAuth
   } // Future<void>
 
+  /// Create a document in collection "partnershipdesk" for player
+  /// for a given `gameTime` with null "player2" field. 
   Future<void> addPlayerLookingForPartner(String gameTime) async {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
@@ -102,9 +104,12 @@ class ApplicationState extends ChangeNotifier {
     );
   }
 
-  /// Delete a user's registration at his request, updating his or her
-  /// partner's registration to "looking for partner", if it exists.
-  void deregister() async {
+  /// Delete a user's registration at his request. 
+  /// If already registered, the user will be either "player1" or
+  /// "player2" in the corresponding Firebase document. No matter
+  /// which is the case, amend the document so that the player
+  /// originally registered with remains so but with no partner.
+    void deregister() async {
     // Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
