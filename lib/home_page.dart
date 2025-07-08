@@ -48,6 +48,19 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: const Color.fromARGB(255, 85, 185, 63),
+        unselectedItemColor: const Color.fromARGB(255, 93, 96, 92),
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Chats',
+          ),
+        ]
+      ),
     );
   }
 }
