@@ -38,8 +38,9 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   @override
   Widget build(BuildContext context) {
     String? userName = FirebaseAuth.instance.currentUser!.displayName!;
-    registered = widget.registeredPlayers.any((entry) => 
-                      (entry.player1 == userName || entry.player2 == userName));
+    registered = widget.registeredPlayers.any(
+      (entry) => (entry.player1 == userName || entry.player2 == userName),
+    );
     return Form(
       key: _formKey,
       child: Container(
@@ -142,10 +143,13 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               ),
             ),
             const SizedBox(height: 8),
-            ...[for (var registration in widget.registeredPlayers) 
-            registration.player2 == null ?
-            Text(registration.player1) :
-              Text('${registration.player1} : ${registration.player2}\n')
+            ...[
+              for (var registration in widget.registeredPlayers)
+                registration.player2 == null
+                    ? Text(registration.player1)
+                    : Text(
+                      '${registration.player1} : ${registration.player2}\n',
+                    ),
             ],
           ],
         ),

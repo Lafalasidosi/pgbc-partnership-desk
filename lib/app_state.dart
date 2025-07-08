@@ -41,9 +41,10 @@ class ApplicationState extends ChangeNotifier {
               for (final document in snapshot.docs) {
                 _registeredPlayers.add(
                   Registration(
-                    game: document.get('game'), 
+                    game: document.get('game'),
                     player1: document.get('player1'),
-                    player2: document.get('player2'))
+                    player2: document.get('player2'),
+                  ),
                 );
               }
               notifyListeners();
@@ -86,10 +87,19 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('You must be logged in to do that!');
     }
 
-    String? player1 = FirebaseAuth.instance.currentUser!.displayName; // ought these become user IDs instead?
+    String? player1 =
+        FirebaseAuth
+            .instance
+            .currentUser!
+            .displayName; // ought these become user IDs instead?
 
-    return  FirebaseFirestore.instance.collection(collectionName).add(
-      <String, dynamic>{'player1': player1, 'player2': player2, 'game': gameTime},);
+    return FirebaseFirestore.instance.collection(collectionName).add(
+      <String, dynamic>{
+        'player1': player1,
+        'player2': player2,
+        'game': gameTime,
+      },
+    );
   }
 
   /// Delete a user's registration at his request, updating his or her
@@ -102,13 +112,17 @@ class ApplicationState extends ChangeNotifier {
 
     String name = FirebaseAuth.instance.currentUser!.displayName!;
     String? pname;
-    CollectionReference db = FirebaseFirestore.instance.collection(collectionName);
+    CollectionReference db = FirebaseFirestore.instance.collection(
+      collectionName,
+    );
 
     // delete calling user's registration
-    var regQuery = db.where(Filter.or(
-          Filter('player1', isEqualTo: name),
-          Filter('player2', isEqualTo: name)
-        ));
+    var regQuery = db.where(
+      Filter.or(
+        Filter('player1', isEqualTo: name),
+        Filter('player2', isEqualTo: name),
+      ),
+    );
 
     QuerySnapshot querySnapshot = await regQuery.get();
 
@@ -129,7 +143,7 @@ class ApplicationState extends ChangeNotifier {
   /// Given a DateTime representation of the current date and an integer
   /// corresponding to the day of the week (Monday: 1, Tuesday: 2, etc.),
   /// return the date of the next occurence of the indicated weekday.
-  /// 
+  ///
   /// For example, if `today` is Monday, August 24 3542 and `dayOfWeek` is
   /// 4, return Thursday, August 27 3542.
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
