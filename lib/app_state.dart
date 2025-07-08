@@ -95,7 +95,7 @@ class ApplicationState extends ChangeNotifier {
   /// Delete a user's registration at his request, updating his or her
   /// partner's registration to "looking for partner", if it exists.
   void deregister() async {
-    /// Assumes the calling user is registered for a given game.
+    // Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
@@ -124,8 +124,6 @@ class ApplicationState extends ChangeNotifier {
         x.reference.update({'player2': null});
       }
     }
-
-    
   }
 
   /// Given a DateTime representation of the current date and an integer
@@ -141,8 +139,9 @@ class ApplicationState extends ChangeNotifier {
     return today;
   }
 
+  /// Extends `getUpcomingDay` to return a String instead of DateTime.
   String getUpcomingDayAsString(int dayOfWeek) {
-    /// This method and `getUpcomingDay` are currently pretty hard-coded.
+    // This method and `getUpcomingDay` are currently pretty hard-coded.
 
     DateTime today = DateTime.now();
     String? weekdayName;
