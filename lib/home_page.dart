@@ -31,7 +31,6 @@ class HomePage extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          //Text("Here's some homepage text."),
           Consumer<ApplicationState>(
             builder:
                 (context, appState, _) => AuthFunc(
@@ -48,7 +47,6 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     children: [
                       PartnershipDesk(
-                        loggedIn: appState.loggedIn,
                         registerForPartner:
                             (gameTime) =>
                                 appState.addPlayerLookingForPartner(gameTime),

@@ -9,7 +9,6 @@ import 'registration.dart';
 class PartnershipDesk extends StatefulWidget {
   const PartnershipDesk({
     super.key,
-    required this.loggedIn,
     required this.registerForPartner,
     required this.deregisterForPartner,
     required this.registerWithPartner,
@@ -17,7 +16,6 @@ class PartnershipDesk extends StatefulWidget {
     required this.registeredPlayers,
   });
 
-  final bool loggedIn;
   final FutureOr<void> Function(String) registerForPartner;
   final FutureOr<void> Function() deregisterForPartner;
   final FutureOr<void> Function(String, String) registerWithPartner;
