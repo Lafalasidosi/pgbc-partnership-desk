@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
       ),
-      //home: const MyHomePage(title: "PGBC Partnership Desk"),
       routerConfig: _router,
     );
   }

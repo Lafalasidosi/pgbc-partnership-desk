@@ -15,20 +15,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('PGBC Partnership Desk')),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(child: Text('Main Menu')),
-            ListTile(
-              title: Text('Schedule'),
-              onTap: () {
-                context.pushReplacement('/schedule');
-              },
-            ),
-          ],
-        ),
-      ),
       body: Column(
         children: <Widget>[
           Consumer<ApplicationState>(
