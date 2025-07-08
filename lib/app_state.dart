@@ -84,6 +84,9 @@ class ApplicationState extends ChangeNotifier {
     } // FirebaseFirestore
   }
 
+  /// For a given `gameTime`, add a document to collection
+  /// "partnershipdesk" with calling user as "player1" and 
+  /// given `player2` as "player2".
   Future<void> addPlayerWithPartner(String gameTime, String player2) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
