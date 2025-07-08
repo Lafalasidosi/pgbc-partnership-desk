@@ -105,12 +105,12 @@ class ApplicationState extends ChangeNotifier {
     CollectionReference db = FirebaseFirestore.instance.collection(collectionName);
 
     // delete calling user's registration
-    var reg_query = db.where(Filter.or(
+    var regQuery = db.where(Filter.or(
           Filter('player1', isEqualTo: name),
           Filter('player2', isEqualTo: name)
         ));
 
-    QuerySnapshot querySnapshot = await reg_query.get();
+    QuerySnapshot querySnapshot = await regQuery.get();
 
     for (var x in querySnapshot.docs) {
       if (x.get('player1') == name) {
@@ -128,6 +128,12 @@ class ApplicationState extends ChangeNotifier {
     
   }
 
+  /// Given a DateTime representation of the current date and an integer
+  /// corresponding to the day of the week (Monday: 1, Tuesday: 2, etc.),
+  /// return the date of the next occurence of the indicated weekday.
+  /// 
+  /// For example, if `today` is Monday, August 24 3542 and `dayOfWeek` is
+  /// 4, return Thursday, August 27 3542.
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {
     while (today.weekday != dayOfWeek) {
       today = today.add(const Duration(days: 1));
