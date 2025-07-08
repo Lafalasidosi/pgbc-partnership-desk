@@ -144,7 +144,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             const SizedBox(height: 8),
             ...[for (var registration in widget.registeredPlayers) 
             registration.player2 == null ?
-            Text('${registration.player1}') :
+            Text(registration.player1) :
               Text('${registration.player1} : ${registration.player2}\n')
             ],
           ],
