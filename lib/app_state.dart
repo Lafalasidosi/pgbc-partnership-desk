@@ -8,6 +8,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
+import 'registration.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -19,6 +20,8 @@ class ApplicationState extends ChangeNotifier {
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   DateTime get currentDate => DateTime.now();
   String collectionName = 'partnershipdesk';
+  List<Registration> _registeredPlayers = [];
+  List<Registration> get registeredPlayers => _registeredPlayers;
 
   Future<void> init() async {
     await Firebase.initializeApp(
@@ -33,8 +36,18 @@ class ApplicationState extends ChangeNotifier {
         _partnershipDeskSubscription = FirebaseFirestore.instance
             .collection('partnershipdesk')
             .snapshots()
-            .listen((snapshot) {});
-        notifyListeners();
+            .listen((snapshot) {
+              _registeredPlayers = [];
+              for (final document in snapshot.docs) {
+                _registeredPlayers.add(
+                  Registration(
+                    game: document.get('game'), 
+                    player1: document.get('player1'),
+                    player2: document.get('player2'))
+                );
+              }
+              notifyListeners();
+            });
       } else {
         _loggedIn = false;
         _partnershipDeskSubscription?.cancel();
@@ -54,71 +67,65 @@ class ApplicationState extends ChangeNotifier {
         await FirebaseFirestore.instance
             .collection(collectionName)
             .where('game', isEqualTo: gameTime)
-            .where('name', isEqualTo: name)
+            .where('player1', isEqualTo: name)
             .get();
 
     if (registration.docs.isEmpty) {
       FirebaseFirestore.instance
           .collection(collectionName)
           .add(<String, dynamic>{
-            'name': FirebaseAuth.instance.currentUser!.displayName,
-            'partner': null,
+            'player1': FirebaseAuth.instance.currentUser!.displayName,
+            'player2': null,
             'game': gameTime,
           });
     } // FirebaseFirestore
   }
 
-  Future<void> addPlayerWithPartner(String gameTime, String pname) {
+  Future<void> addPlayerWithPartner(String gameTime, String player2) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
-    String? name =
-        FirebaseAuth
-            .instance
-            .currentUser!
-            .displayName; // ought these become user IDs instead?
+    String? player1 = FirebaseAuth.instance.currentUser!.displayName; // ought these become user IDs instead?
 
-    FirebaseFirestore.instance.collection(collectionName).add(<String, dynamic>{
-      'name': pname,
-      'partner': name,
-      'game': gameTime,
-    });
-
-    return FirebaseFirestore.instance.collection(collectionName).add(
-      <String, dynamic>{'name': name, 'partner': pname, 'game': gameTime},
-    );
+    return  FirebaseFirestore.instance.collection(collectionName).add(
+      <String, dynamic>{'player1': player1, 'player2': player2, 'game': gameTime},);
   }
 
   /// Delete a user's registration at his request, updating his or her
   /// partner's registration to "looking for partner", if it exists.
   void deregister() async {
-
+    /// Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
 
     String name = FirebaseAuth.instance.currentUser!.displayName!;
+    String? pname;
+    CollectionReference db = FirebaseFirestore.instance.collection(collectionName);
 
-    var registration = FirebaseFirestore.instance
-        .collection(collectionName)
-        .where('name', isEqualTo: name);
+    // delete calling user's registration
+    var reg_query = db.where(Filter.or(
+          Filter('player1', isEqualTo: name),
+          Filter('player2', isEqualTo: name)
+        ));
 
-    await registration.get().then((snapshot) {
-      for (var x in snapshot.docs) {
-        x.reference.delete();
+    QuerySnapshot querySnapshot = await reg_query.get();
+
+    for (var x in querySnapshot.docs) {
+      if (x.get('player1') == name) {
+        pname = x.get('player2');
+        if (pname == null) {
+          x.reference.delete();
+        } else {
+          x.reference.update({'player1': pname, 'player2': null});
+        }
+      } else {
+        x.reference.update({'player2': null});
       }
-    });
+    }
 
-    registration = FirebaseFirestore.instance
-        .collection(collectionName)
-        .where('partner', isEqualTo: name);
-
-    await registration.get().then((snapshot) {
-      for (var x in snapshot.docs) {
-        x.reference.update({'partner': null});
-      }
-    });
+    
   }
 
   DateTime getUpcomingDay(DateTime today, int dayOfWeek) {

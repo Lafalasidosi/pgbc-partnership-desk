@@ -1,7 +1,10 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'
+    hide EmailAuthProvider, PhoneAuthProvider;
+
+import 'registration.dart';
 
 class PartnershipDesk extends StatefulWidget {
   const PartnershipDesk({
@@ -11,6 +14,7 @@ class PartnershipDesk extends StatefulWidget {
     required this.deregisterForPartner,
     required this.registerWithPartner,
     required this.upcomingGameDate,
+    required this.registeredPlayers,
   });
 
   final bool loggedIn;
@@ -18,6 +22,7 @@ class PartnershipDesk extends StatefulWidget {
   final FutureOr<void> Function() deregisterForPartner;
   final FutureOr<void> Function(String, String) registerWithPartner;
   final String upcomingGameDate;
+  final List<Registration> registeredPlayers;
 
   @override
   State<StatefulWidget> createState() => _PartnershipDeskState();
@@ -26,13 +31,15 @@ class PartnershipDesk extends StatefulWidget {
 class _PartnershipDeskState extends State<PartnershipDesk> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_PartnershipDeskState');
   final _controller = TextEditingController();
-  final db = FirebaseFirestore.instance.collection('partnershipdesk');
   bool registered = false;
   final bool _validate = false;
   bool get validate => _validate;
 
   @override
   Widget build(BuildContext context) {
+    String? userName = FirebaseAuth.instance.currentUser!.displayName!;
+    registered = widget.registeredPlayers.any((entry) => 
+                      (entry.player1 == userName || entry.player2 == userName));
     return Form(
       key: _formKey,
       child: Container(
@@ -134,6 +141,12 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                 child: Text('Unregister'),
               ),
             ),
+            const SizedBox(height: 8),
+            ...[for (var registration in widget.registeredPlayers) 
+            registration.player2 == null ?
+            Text('${registration.player1}') :
+              Text('${registration.player1} : ${registration.player2}\n')
+            ],
           ],
         ),
       ),
