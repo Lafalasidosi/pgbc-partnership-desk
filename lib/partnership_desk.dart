@@ -146,7 +146,10 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             ...[
               for (var registration in widget.registeredPlayers)
                 registration.player2 == null
-                    ? Text(registration.player1)
+                    // TODO: instead of a Text widget, if a player is looking
+                    // for a partner, his name should show as a button, 
+                    // clicking which sends him a registration request.
+                    ? Text(registration.player1) 
                     : Text(
                       '${registration.player1} : ${registration.player2}\n',
                     ),
