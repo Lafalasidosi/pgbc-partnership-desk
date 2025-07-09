@@ -32,8 +32,6 @@ class ApplicationState extends ChangeNotifier {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    String? name = FirebaseAuth.instance.currentUser!.displayName;
-
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
     FirebaseAuth.instance.userChanges().listen((user) {
@@ -54,22 +52,23 @@ class ApplicationState extends ChangeNotifier {
                 );
               }
               notifyListeners();
-            });
-        _activeRequestsSubscription = FirebaseFirestore.instance
-            .collection('requests')
-            .where('requestee', isEqualTo: name)
-            .snapshots()
-            .listen((snapshot) {
-              _activeRequests = [];
-              for (var document in snapshot.docs) {
-                _activeRequests.add(
-                  Request(
-                    gameTime: document.get('gameTime'),
-                    requestee: document.get('requestee'),
-                    requestor: document.get('requestor')
-                  )
-                );
-              }
+              String? name = FirebaseAuth.instance.currentUser!.displayName;
+              _activeRequestsSubscription = FirebaseFirestore.instance
+                  .collection('requests')
+                  .where('requestee', isEqualTo: name)
+                  .snapshots()
+                  .listen((snapshot) {
+                    _activeRequests = [];
+                    for (var document in snapshot.docs) {
+                      _activeRequests.add(
+                        Request(
+                          gameTime: document.get('gameTime'),
+                          requestee: document.get('requestee'),
+                          requestor: document.get('requestor'),
+                        ),
+                      );
+                    }
+                  });
             });
       } else {
         _loggedIn = false;
@@ -80,7 +79,7 @@ class ApplicationState extends ChangeNotifier {
   } // Future<void>
 
   /// Create a document in collection "partnershipdesk" for player
-  /// for a given `gameTime` with null "player2" field. 
+  /// for a given `gameTime` with null "player2" field.
   Future<void> addPlayerLookingForPartner(String gameTime) async {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
@@ -107,7 +106,7 @@ class ApplicationState extends ChangeNotifier {
   }
 
   /// For a given `gameTime`, add a document to collection
-  /// "partnershipdesk" with calling user as "player1" and 
+  /// "partnershipdesk" with calling user as "player1" and
   /// given `player2` as "player2".
   Future<void> addPlayerWithPartner(String gameTime, String player2) {
     if (!_loggedIn) {
@@ -129,12 +128,12 @@ class ApplicationState extends ChangeNotifier {
     );
   }
 
-  /// Delete a user's registration at his request. 
+  /// Delete a user's registration at his request.
   /// If already registered, the user will be either "player1" or
   /// "player2" in the corresponding Firebase document. No matter
   /// which is the case, amend the document so that the player
   /// originally registered with remains so but with no partner.
-    void deregister() async {
+  void deregister() async {
     // Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
