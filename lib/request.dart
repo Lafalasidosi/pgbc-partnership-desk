@@ -1,7 +1,18 @@
-class Request {
-    Request({required this.requestor, required this.requestee, required this.gameTime});
+import 'package:flutter/widgets.dart';
 
-    String requestor;
-    String requestee;
-    String gameTime;
+class Request extends StatelessWidget {
+  Request({
+    required this.requestor,
+    required this.requestee,
+    required this.gameTime,
+  });
+
+  String requestor;
+  String requestee;
+  String gameTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Placeholder();
+  }
 }
