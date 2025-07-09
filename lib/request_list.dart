@@ -24,6 +24,17 @@ class _RequestListState extends State<RequestList> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: () {}, child: Placeholder());
+    return Container(
+      width: 300,
+      color: const Color.fromARGB(255, 239, 174, 106),  
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:
+        [for (var x in widget.activeRequests)
+          Text('${x.requestor} invites you to ${x.gameTime}'),
+        ],
+      ),
+      );
+    
   }
 }

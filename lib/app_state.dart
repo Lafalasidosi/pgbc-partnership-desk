@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 import 'registration.dart';
+import 'request.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -18,15 +19,20 @@ class ApplicationState extends ChangeNotifier {
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
+  StreamSubscription<QuerySnapshot>? _activeRequestsSubscription;
   DateTime get currentDate => DateTime.now();
   String collectionName = 'partnershipdesk';
   List<Registration> _registeredPlayers = [];
   List<Registration> get registeredPlayers => _registeredPlayers;
+  List<Request> _activeRequests = [];
+  List<Request> get activeRequests => _activeRequests;
 
   Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+
+    String? name = FirebaseAuth.instance.currentUser!.displayName;
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
@@ -48,6 +54,22 @@ class ApplicationState extends ChangeNotifier {
                 );
               }
               notifyListeners();
+            });
+        _activeRequestsSubscription = FirebaseFirestore.instance
+            .collection('requests')
+            .where('requestee', isEqualTo: name)
+            .snapshots()
+            .listen((snapshot) {
+              _activeRequests = [];
+              for (var document in snapshot.docs) {
+                _activeRequests.add(
+                  Request(
+                    gameTime: document.get('gameTime'),
+                    requestee: document.get('requestee'),
+                    requestor: document.get('requestor')
+                  )
+                );
+              }
             });
       } else {
         _loggedIn = false;
