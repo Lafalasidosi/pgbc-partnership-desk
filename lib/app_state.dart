@@ -34,6 +34,8 @@ class ApplicationState extends ChangeNotifier {
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
+    String? name = FirebaseAuth.instance.currentUser?.displayName;
+
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
@@ -52,23 +54,22 @@ class ApplicationState extends ChangeNotifier {
                 );
               }
               notifyListeners();
-              String? name = FirebaseAuth.instance.currentUser!.displayName;
-              _activeRequestsSubscription = FirebaseFirestore.instance
-                  .collection('requests')
-                  .where('requestee', isEqualTo: name)
-                  .snapshots()
-                  .listen((snapshot) {
-                    _activeRequests = [];
-                    for (var document in snapshot.docs) {
-                      _activeRequests.add(
-                        Request(
-                          gameTime: document.get('gameTime'),
-                          requestee: document.get('requestee'),
-                          requestor: document.get('requestor'),
-                        ),
-                      );
-                    }
-                  });
+            });
+        _activeRequestsSubscription = FirebaseFirestore.instance
+            .collection('requests')
+            .where('requestee', isEqualTo: name)
+            .snapshots()
+            .listen((snapshot) {
+              _activeRequests = [];
+              for (var document in snapshot.docs) {
+                _activeRequests.add(
+                  Request(
+                    gameTime: document.get('gameTime'),
+                    requestee: document.get('requestee'),
+                    requestor: document.get('requestor'),
+                  ),
+                );
+              }
             });
       } else {
         _loggedIn = false;
