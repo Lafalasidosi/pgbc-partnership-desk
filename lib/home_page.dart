@@ -43,6 +43,9 @@ class HomePage extends StatelessWidget {
                                 appState.addPlayerWithPartner(gameTime, pname),
                         upcomingGameDate: appState.getUpcomingDayAsString(2),
                         registeredPlayers: appState.registeredPlayers,
+                        sendRequest:
+                            (gameTime, requestee) =>
+                                appState.sendRequest(gameTime, requestee),
                       ),
                     ],
                   ),

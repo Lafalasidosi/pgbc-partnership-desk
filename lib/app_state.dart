@@ -22,6 +22,7 @@ class ApplicationState extends ChangeNotifier {
   StreamSubscription<QuerySnapshot>? _activeRequestsSubscription;
   DateTime get currentDate => DateTime.now();
   String collectionName = 'partnershipdesk';
+  String requestsCollection = 'requests';
   List<Registration> _registeredPlayers = [];
   List<Registration> get registeredPlayers => _registeredPlayers;
   List<Request> _activeRequests = [];
@@ -62,14 +63,18 @@ class ApplicationState extends ChangeNotifier {
             .listen((snapshot) {
               _activeRequests = [];
               for (var document in snapshot.docs) {
+                var x = document.get('gameTime') as String;
+                var y = document.get('requestee') as String;
+                var z = document.get('requestor') as String;
                 _activeRequests.add(
                   Request(
-                    gameTime: document.get('gameTime'),
-                    requestee: document.get('requestee'),
-                    requestor: document.get('requestor'),
+                    gameTime: x,
+                    requestee: y,
+                    requestor: z,
                   ),
                 );
               }
+              notifyListeners();
             });
       } else {
         _loggedIn = false;
@@ -78,6 +83,21 @@ class ApplicationState extends ChangeNotifier {
       notifyListeners();
     }); // FirebaseAuth
   } // Future<void>
+
+     sendRequest(String gameTime, String requestee) {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+    String requestor = FirebaseAuth.instance.currentUser!.displayName!;
+
+    return FirebaseFirestore.instance.collection(requestsCollection).add(
+      <String, dynamic>{
+        'gameTime': gameTime,
+        'requestee': requestee,
+        'requestor': requestor,
+      },
+    );
+  }
 
   /// Create a document in collection "partnershipdesk" for player
   /// for a given `gameTime` with null "player2" field.
