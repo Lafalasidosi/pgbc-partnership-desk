@@ -31,7 +31,7 @@ class _RequestListState extends State<RequestList> {
         mainAxisAlignment: MainAxisAlignment.center,
         children:
         [for (var x in widget.activeRequests)
-          Text('${x.requestor} invites you to ${x.gameTime}'),
+          x,
         ],
       ),
       );
