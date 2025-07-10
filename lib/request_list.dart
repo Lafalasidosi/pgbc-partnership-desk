@@ -8,9 +8,14 @@ import 'registration.dart';
 import 'request.dart';
 
 class RequestList extends StatefulWidget {
-  const RequestList({super.key, required this.activeRequests});
+  const RequestList({
+    super.key,
+    required this.activeRequests,
+    required this.acceptAction,
+  });
 
   final List<Request> activeRequests;
+  final Future<void> Function(String, String) acceptAction;
 
   @override
   State<StatefulWidget> createState() => _RequestListState();
@@ -41,7 +46,10 @@ class _RequestListState extends State<RequestList> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(onPressed: () {}, child: Text('Accept')),
+                        ElevatedButton(onPressed: () {
+                          widget.acceptAction(x.gameTime, x.requestor);
+                        }, 
+                        child: Text('Accept')),
                         ElevatedButton(
                           onPressed: () {},
                           child: Text('Decline'),

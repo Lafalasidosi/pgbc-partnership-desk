@@ -101,6 +101,21 @@ class ApplicationState extends ChangeNotifier {
     );
   }
 
+  Future<void> deleteRequest(String gameTime, String requestor) async {
+    String requestee = FirebaseAuth.instance.currentUser!.displayName!;
+    assert(requestee != requestor);
+
+    await FirebaseFirestore.instance.collection(requestsCollection)
+    .where('gameTime', isEqualTo: gameTime)
+    .where('requestee', isEqualTo: requestee)
+    .where('requestor', isEqualTo: requestor)
+    .get()
+    .then((snapshot) {
+      var doc = snapshot.docs.first;
+      doc.reference.delete();
+    });
+  }
+
   /// Create a document in collection "partnershipdesk" for player
   /// for a given `gameTime` with null "player2" field.
   Future<void> addPlayerLookingForPartner(String gameTime) async {

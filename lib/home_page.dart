@@ -55,7 +55,9 @@ class HomePage extends StatelessWidget {
                   builder: (context, appState, _) => Visibility(
                     visible: appState.loggedIn,
                     child: RequestList(
-                      activeRequests: appState.activeRequests
+                      activeRequests: appState.activeRequests,
+                      acceptAction: (gameTime, requestee) =>
+                       appState.deleteRequest(gameTime, requestee),
                     ),
                   )
                 ),
