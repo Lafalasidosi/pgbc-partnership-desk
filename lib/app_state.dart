@@ -41,7 +41,7 @@ class ApplicationState extends ChangeNotifier {
       if (user != null) {
         _loggedIn = true;
         _partnershipDeskSubscription = FirebaseFirestore.instance
-            .collection('partnershipdesk')
+            .collection(collectionName)
             .snapshots()
             .listen((snapshot) {
               _registeredPlayers = [];
@@ -57,8 +57,8 @@ class ApplicationState extends ChangeNotifier {
               notifyListeners();
             });
         _activeRequestsSubscription = FirebaseFirestore.instance
-            .collection('requests')
-            .where('requestee', isEqualTo: name)
+            .collection(requestsCollection)
+            // .where('requestee', isEqualTo: name)
             .snapshots()
             .listen((snapshot) {
               _activeRequests = [];
@@ -79,16 +79,18 @@ class ApplicationState extends ChangeNotifier {
       } else {
         _loggedIn = false;
         _partnershipDeskSubscription?.cancel();
+        _activeRequestsSubscription?.cancel();
       }
       notifyListeners();
     }); // FirebaseAuth
   } // Future<void>
 
-     sendRequest(String gameTime, String requestee) {
+  Future<void> sendRequest(String gameTime, String requestee) {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
     String requestor = FirebaseAuth.instance.currentUser!.displayName!;
+    assert(requestor != requestee);
 
     return FirebaseFirestore.instance.collection(requestsCollection).add(
       <String, dynamic>{

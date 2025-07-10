@@ -8,10 +8,7 @@ import 'registration.dart';
 import 'request.dart';
 
 class RequestList extends StatefulWidget {
-  const RequestList({
-    super.key,
-    required this.activeRequests,
-  });
+  const RequestList({super.key, required this.activeRequests});
 
   final List<Request> activeRequests;
 
@@ -24,17 +21,38 @@ class _RequestListState extends State<RequestList> {
 
   @override
   Widget build(BuildContext context) {
+    String? username = FirebaseAuth.instance.currentUser!.displayName;
     return Container(
       width: 300,
-      color: const Color.fromARGB(255, 239, 174, 106),  
+      color: const Color.fromARGB(255, 239, 174, 106),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children:
-        [for (var x in widget.activeRequests)
-          x,
+        children: [
+          for (Request x in widget.activeRequests)
+            if (x.requestee == username)
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  color: Color.fromARGB(0, 230, 168, 52),
+                ),
+                child: Column(
+                  children: [
+                    Text('${x.requestor} invites you to a game: ${x.gameTime}'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(onPressed: () {}, child: Text('Accept')),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Decline'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
         ],
       ),
-      );
-    
+    );
   }
 }
