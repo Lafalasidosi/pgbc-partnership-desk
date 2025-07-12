@@ -53,7 +53,9 @@ class _RequestListState extends State<RequestList> {
                         }, 
                         child: Text('Accept')),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            widget.declineAction(x.gameTime, x.requestor);
+                          },
                           child: Text('Decline'),
                         ),
                       ],

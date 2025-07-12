@@ -116,6 +116,13 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
+  Future<void> acceptAction(String gameTime, String requestor) async {
+    String requestee = FirebaseAuth.instance.currentUser!.displayName!;
+    deregister();
+    addPlayerWithPartner(gameTime, requestor);
+    deleteRequest(gameTime, requestor);
+  }
+
   /// Create a document in collection "partnershipdesk" for player
   /// for a given `gameTime` with null "player2" field.
   Future<void> addPlayerLookingForPartner(String gameTime) async {
