@@ -58,6 +58,7 @@ class HomePage extends StatelessWidget {
                       activeRequests: appState.activeRequests,
                       acceptAction: (gameTime, requestee) =>
                        appState.deleteRequest(gameTime, requestee),
+                      declineAction: 
                     ),
                   )
                 ),

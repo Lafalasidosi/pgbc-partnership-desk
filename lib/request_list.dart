@@ -12,10 +12,12 @@ class RequestList extends StatefulWidget {
     super.key,
     required this.activeRequests,
     required this.acceptAction,
+    required this.declineAction,
   });
 
   final List<Request> activeRequests;
   final Future<void> Function(String, String) acceptAction;
+  final Future<void> Funtion(String, String) declineAction;
 
   @override
   State<StatefulWidget> createState() => _RequestListState();
