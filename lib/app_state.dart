@@ -27,6 +27,13 @@ class ApplicationState extends ChangeNotifier {
   List<Registration> get registeredPlayers => _registeredPlayers;
   List<Request> _activeRequests = [];
   List<Request> get activeRequests => _activeRequests;
+  Timer.periodic(const Duration(days: 1), resetCurrentDate)
+
+  void resetCurrentDate() {
+    newDay = DateTime.now();
+    currentDate = newDay;
+    notifyListeners();
+  }
 
   Future<void> init() async {
     await Firebase.initializeApp(
