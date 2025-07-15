@@ -14,6 +14,7 @@ class PartnershipDesk extends StatefulWidget {
     required this.registerWithPartner,
     required this.upcomingGameDate,
     required this.registeredPlayers,
+    required this.sendRequest,
   });
 
   final FutureOr<void> Function(String) registerForPartner;
@@ -21,6 +22,7 @@ class PartnershipDesk extends StatefulWidget {
   final FutureOr<void> Function(String, String) registerWithPartner;
   final String upcomingGameDate;
   final List<Registration> registeredPlayers;
+  final Future<void> Function(String, String) sendRequest;
 
   @override
   State<StatefulWidget> createState() => _PartnershipDeskState();
@@ -144,10 +146,12 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             ...[
               for (var registration in widget.registeredPlayers)
                 registration.player2 == null
-                    // TODO: instead of a Text widget, if a player is looking
-                    // for a partner, his name should show as a button, 
-                    // clicking which sends him a registration request.
-                    ? Text(registration.player1) 
+                    ? ElevatedButton(
+                      onPressed: () => widget.sendRequest(
+                        registration.game, registration.player1
+                      ),
+                      child: Text(registration.player1),
+                    )
                     : Text(
                       '${registration.player1} : ${registration.player2}\n',
                     ),

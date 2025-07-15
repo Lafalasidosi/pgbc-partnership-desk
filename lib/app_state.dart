@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 import 'registration.dart';
+import 'request.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -18,10 +19,21 @@ class ApplicationState extends ChangeNotifier {
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
+  StreamSubscription<QuerySnapshot>? _activeRequestsSubscription;
   DateTime get currentDate => DateTime.now();
   String collectionName = 'partnershipdesk';
+  String requestsCollection = 'requests';
   List<Registration> _registeredPlayers = [];
   List<Registration> get registeredPlayers => _registeredPlayers;
+  List<Request> _activeRequests = [];
+  List<Request> get activeRequests => _activeRequests;
+  Timer.periodic(const Duration(days: 1), resetCurrentDate)
+
+  void resetCurrentDate() {
+    newDay = DateTime.now();
+    currentDate = newDay;
+    notifyListeners();
+  }
 
   Future<void> init() async {
     await Firebase.initializeApp(
@@ -30,11 +42,13 @@ class ApplicationState extends ChangeNotifier {
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
+    String? name = FirebaseAuth.instance.currentUser?.displayName;
+
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
         _partnershipDeskSubscription = FirebaseFirestore.instance
-            .collection('partnershipdesk')
+            .collection(collectionName)
             .snapshots()
             .listen((snapshot) {
               _registeredPlayers = [];
@@ -49,16 +63,75 @@ class ApplicationState extends ChangeNotifier {
               }
               notifyListeners();
             });
+        _activeRequestsSubscription = FirebaseFirestore.instance
+            .collection(requestsCollection)
+            // .where('requestee', isEqualTo: name)
+            .snapshots()
+            .listen((snapshot) {
+              _activeRequests = [];
+              for (var document in snapshot.docs) {
+                var x = document.get('gameTime') as String;
+                var y = document.get('requestee') as String;
+                var z = document.get('requestor') as String;
+                _activeRequests.add(
+                  Request(
+                    gameTime: x,
+                    requestee: y,
+                    requestor: z,
+                  ),
+                );
+              }
+              notifyListeners();
+            });
       } else {
         _loggedIn = false;
         _partnershipDeskSubscription?.cancel();
+        _activeRequestsSubscription?.cancel();
       }
       notifyListeners();
     }); // FirebaseAuth
   } // Future<void>
 
+  Future<void> sendRequest(String gameTime, String requestee) {
+    if (!_loggedIn) {
+      throw Exception('You must be logged in to do that!');
+    }
+    String requestor = FirebaseAuth.instance.currentUser!.displayName!;
+    assert(requestor != requestee);
+
+    return FirebaseFirestore.instance.collection(requestsCollection).add(
+      <String, dynamic>{
+        'gameTime': gameTime,
+        'requestee': requestee,
+        'requestor': requestor,
+      },
+    );
+  }
+
+  Future<void> deleteRequest(String gameTime, String requestor) async {
+    String requestee = FirebaseAuth.instance.currentUser!.displayName!;
+    assert(requestee != requestor);
+
+    await FirebaseFirestore.instance.collection(requestsCollection)
+    .where('gameTime', isEqualTo: gameTime)
+    .where('requestee', isEqualTo: requestee)
+    .where('requestor', isEqualTo: requestor)
+    .get()
+    .then((snapshot) {
+      var doc = snapshot.docs.first;
+      doc.reference.delete();
+    });
+  }
+
+  Future<void> acceptAction(String gameTime, String requestor) async {
+    String requestee = FirebaseAuth.instance.currentUser!.displayName!;
+    deregister();
+    addPlayerWithPartner(gameTime, requestor);
+    deleteRequest(gameTime, requestor);
+  }
+
   /// Create a document in collection "partnershipdesk" for player
-  /// for a given `gameTime` with null "player2" field. 
+  /// for a given `gameTime` with null "player2" field.
   Future<void> addPlayerLookingForPartner(String gameTime) async {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
@@ -85,7 +158,7 @@ class ApplicationState extends ChangeNotifier {
   }
 
   /// For a given `gameTime`, add a document to collection
-  /// "partnershipdesk" with calling user as "player1" and 
+  /// "partnershipdesk" with calling user as "player1" and
   /// given `player2` as "player2".
   Future<void> addPlayerWithPartner(String gameTime, String player2) {
     if (!_loggedIn) {
@@ -107,12 +180,12 @@ class ApplicationState extends ChangeNotifier {
     );
   }
 
-  /// Delete a user's registration at his request. 
+  /// Delete a user's registration at his request.
   /// If already registered, the user will be either "player1" or
   /// "player2" in the corresponding Firebase document. No matter
   /// which is the case, amend the document so that the player
   /// originally registered with remains so but with no partner.
-    void deregister() async {
+  void deregister() async {
     // Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');

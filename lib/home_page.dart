@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdv0/partnership_desk.dart';
+import 'package:pdv0/request_list.dart';
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
@@ -42,11 +43,26 @@ class HomePage extends StatelessWidget {
                                 appState.addPlayerWithPartner(gameTime, pname),
                         upcomingGameDate: appState.getUpcomingDayAsString(2),
                         registeredPlayers: appState.registeredPlayers,
+                        sendRequest:
+                            (gameTime, requestee) =>
+                                appState.sendRequest(gameTime, requestee),
                       ),
                     ],
                   ),
                 ),
           ),
+          Consumer<ApplicationState>(
+                  builder: (context, appState, _) => Visibility(
+                    visible: appState.loggedIn,
+                    child: RequestList(
+                      activeRequests: appState.activeRequests,
+                      acceptAction: (gameTime, requestee) =>
+                       appState.acceptAction(gameTime, requestee),
+                      declineAction: (gametime, requestee) =>
+                        deleteRequest(gameTime, requestee),
+                    ),
+                  )
+                ),
         ],
       ),
     );
