@@ -20,18 +20,21 @@ class ApplicationState extends ChangeNotifier {
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   StreamSubscription<QuerySnapshot>? _activeRequestsSubscription;
-  DateTime get currentDate => DateTime.now();
+  DateTime _currentDate = DateTime.now();
+  DateTime get currentDate => _currentDate;
+  set currentDate(DateTime t) {
+    DateTime.now();
+  }
   String collectionName = 'partnershipdesk';
   String requestsCollection = 'requests';
   List<Registration> _registeredPlayers = [];
   List<Registration> get registeredPlayers => _registeredPlayers;
   List<Request> _activeRequests = [];
   List<Request> get activeRequests => _activeRequests;
-  Timer.periodic(const Duration(days: 1), resetCurrentDate)
+  
 
-  void resetCurrentDate() {
-    newDay = DateTime.now();
-    currentDate = newDay;
+  void resetCurrentDate(Timer t) {
+    currentDate = DateTime.now();
     notifyListeners();
   }
 
@@ -39,6 +42,8 @@ class ApplicationState extends ChangeNotifier {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+
+    Timer.periodic(Duration(days: 1), resetCurrentDate);
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
@@ -55,7 +60,7 @@ class ApplicationState extends ChangeNotifier {
               for (final document in snapshot.docs) {
                 _registeredPlayers.add(
                   Registration(
-                    game: document.get('game'),
+                    game: document.get('gameTime'),
                     player1: document.get('player1'),
                     player2: document.get('player2'),
                   ),
@@ -124,7 +129,6 @@ class ApplicationState extends ChangeNotifier {
   }
 
   Future<void> acceptAction(String gameTime, String requestor) async {
-    String requestee = FirebaseAuth.instance.currentUser!.displayName!;
     deregister();
     addPlayerWithPartner(gameTime, requestor);
     deleteRequest(gameTime, requestor);
@@ -142,7 +146,7 @@ class ApplicationState extends ChangeNotifier {
     QuerySnapshot registration =
         await FirebaseFirestore.instance
             .collection(collectionName)
-            .where('game', isEqualTo: gameTime)
+            .where('gameTime', isEqualTo: gameTime)
             .where('player1', isEqualTo: name)
             .get();
 
@@ -152,7 +156,7 @@ class ApplicationState extends ChangeNotifier {
           .add(<String, dynamic>{
             'player1': FirebaseAuth.instance.currentUser!.displayName,
             'player2': null,
-            'game': gameTime,
+            'gameTime': gameTime,
           });
     } // FirebaseFirestore
   }
@@ -175,7 +179,7 @@ class ApplicationState extends ChangeNotifier {
       <String, dynamic>{
         'player1': player1,
         'player2': player2,
-        'game': gameTime,
+        'gameTime': gameTime,
       },
     );
   }
