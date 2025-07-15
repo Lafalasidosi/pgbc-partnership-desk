@@ -56,10 +56,10 @@ class HomePage extends StatelessWidget {
                     visible: appState.loggedIn,
                     child: RequestList(
                       activeRequests: appState.activeRequests,
-                      acceptAction: (gameTime, requestee) =>
-                       appState.acceptAction(gameTime, requestee),
-                      declineAction: (gametime, requestee) =>
-                        deleteRequest(gameTime, requestee),
+                      acceptAction: (gameTime, requestor) =>
+                       appState.acceptAction(gameTime, requestor),
+                      declineAction: (gameTime, requestee) =>
+                        appState.deleteRequest(gameTime, requestee),
                     ),
                   )
                 ),
