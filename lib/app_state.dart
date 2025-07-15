@@ -129,7 +129,7 @@ class ApplicationState extends ChangeNotifier {
   }
 
   Future<void> acceptAction(String gameTime, String requestor) async {
-    deregister();
+    await deregister();
     addPlayerWithPartner(gameTime, requestor);
     deleteRequest(gameTime, requestor);
   }
@@ -164,7 +164,7 @@ class ApplicationState extends ChangeNotifier {
   /// For a given `gameTime`, add a document to collection
   /// "partnershipdesk" with calling user as "player1" and
   /// given `player2` as "player2".
-  Future<void> addPlayerWithPartner(String gameTime, String player2) {
+  Future<void> addPlayerWithPartner(String gameTime, String player2) async {
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
     }
@@ -175,13 +175,20 @@ class ApplicationState extends ChangeNotifier {
             .currentUser!
             .displayName; // ought these become user IDs instead?
 
-    return FirebaseFirestore.instance.collection(collectionName).add(
-      <String, dynamic>{
+    QuerySnapshot registration =
+        await FirebaseFirestore.instance
+            .collection(collectionName)
+            .where('gameTime', isEqualTo: gameTime)
+            .where('player1', isEqualTo: player1)
+            .get();
+
+    if (registration.docs.isEmpty) {
+      FirebaseFirestore.instance.collection(collectionName).add(<String, dynamic>{
         'player1': player1,
         'player2': player2,
         'gameTime': gameTime,
-      },
-    );
+      });
+    }
   }
 
   /// Delete a user's registration at his request.
@@ -189,7 +196,7 @@ class ApplicationState extends ChangeNotifier {
   /// "player2" in the corresponding Firebase document. No matter
   /// which is the case, amend the document so that the player
   /// originally registered with remains so but with no partner.
-  void deregister() async {
+  Future<void> deregister() async {
     // Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
