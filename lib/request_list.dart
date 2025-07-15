@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 
-import 'registration.dart';
 import 'request.dart';
 
 class RequestList extends StatefulWidget {
@@ -17,15 +16,13 @@ class RequestList extends StatefulWidget {
 
   final List<Request> activeRequests;
   final Future<void> Function(String, String) acceptAction;
-  final Future<void> Funtion(String, String) declineAction;
+  final Future<void> Function(String, String) declineAction;
 
   @override
   State<StatefulWidget> createState() => _RequestListState();
 }
 
 class _RequestListState extends State<RequestList> {
-  final _formKey = GlobalKey<FormState>(debugLabel: '_RequestListState');
-
   @override
   Widget build(BuildContext context) {
     String? username = FirebaseAuth.instance.currentUser!.displayName;
