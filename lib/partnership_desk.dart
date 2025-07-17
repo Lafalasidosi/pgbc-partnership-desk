@@ -143,7 +143,8 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               ),
             ),
             const SizedBox(height: 8),
-            ...[
+            // TODO: fix how a registration for one game shows up in two PDs
+            ...[ 
               for (var registration in widget.registeredPlayers)
                 registration.player2 == null
                     ? ElevatedButton(
