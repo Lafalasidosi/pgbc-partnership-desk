@@ -38,8 +38,10 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   @override
   Widget build(BuildContext context) {
     String? userName = FirebaseAuth.instance.currentUser!.displayName!;
-    registered = widget.registeredPlayers.any(
-      (entry) => (entry.player1 == userName || entry.player2 == userName),
+    registered = widget.registeredPlayers.where(
+      (entry) => ((entry.player1 == userName || 
+                  entry.player2 == userName) &&
+                  entry.gameTime == widget.gameTime),
     );
     return Form(
       key: _formKey,
