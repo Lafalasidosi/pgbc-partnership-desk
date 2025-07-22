@@ -34,15 +34,20 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   bool registered = false;
   final bool _validate = false;
   bool get validate => _validate;
+  List<Registration> ps = [];
 
   @override
   Widget build(BuildContext context) {
     String? userName = FirebaseAuth.instance.currentUser!.displayName!;
-    registered = widget.registeredPlayers.where(
-      (entry) => ((entry.player1 == userName || 
-                  entry.player2 == userName) &&
-                  entry.gameTime == widget.gameTime),
-    );
+    ps =
+        widget.registeredPlayers
+            .where(
+              (entry) =>
+                  ((entry.player1 == userName || entry.player2 == userName) &&
+                      entry.gameTime == widget.upcomingGameDate),
+            )
+            .toList();
+    registered = ps.isNotEmpty;
     return Form(
       key: _formKey,
       child: Container(
@@ -145,14 +150,15 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               ),
             ),
             const SizedBox(height: 8),
-            // TODO: fix how a registration for one game shows up in two PDs
-            ...[ 
-              for (var registration in widget.registeredPlayers)
+            ...[
+              for (var registration in ps)
                 registration.player2 == null
                     ? ElevatedButton(
-                      onPressed: () => widget.sendRequest(
-                        registration.game, registration.player1
-                      ),
+                      onPressed:
+                          () => widget.sendRequest(
+                            registration.gameTime,
+                            registration.player1,
+                          ),
                       child: Text(registration.player1),
                     )
                     : Text(

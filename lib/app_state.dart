@@ -60,7 +60,7 @@ class ApplicationState extends ChangeNotifier {
               for (final document in snapshot.docs) {
                 _registeredPlayers.add(
                   Registration(
-                    game: document.get('gameTime'),
+                    gameTime: document.get('gameTime'),
                     player1: document.get('player1'),
                     player2: document.get('player2'),
                   ),
