@@ -25,7 +25,7 @@ class ApplicationState extends ChangeNotifier {
   set currentDate(DateTime t) {
     DateTime.now();
   }
-  String collectionName = 'partnershipdesk';
+  String partnersCollection = 'partnershipdesk';
   String requestsCollection = 'requests';
   List<Registration> _registeredPlayers = [];
   List<Registration> get registeredPlayers => _registeredPlayers;
@@ -53,7 +53,7 @@ class ApplicationState extends ChangeNotifier {
       if (user != null) {
         _loggedIn = true;
         _partnershipDeskSubscription = FirebaseFirestore.instance
-            .collection(collectionName)
+            .collection(partnersCollection)
             .snapshots()
             .listen((snapshot) {
               _registeredPlayers = [];
@@ -145,14 +145,14 @@ class ApplicationState extends ChangeNotifier {
 
     QuerySnapshot registration =
         await FirebaseFirestore.instance
-            .collection(collectionName)
+            .collection(partnersCollection)
             .where('gameTime', isEqualTo: gameTime)
             .where('player1', isEqualTo: name)
             .get();
 
     if (registration.docs.isEmpty) {
       FirebaseFirestore.instance
-          .collection(collectionName)
+          .collection(partnersCollection)
           .add(<String, dynamic>{
             'player1': FirebaseAuth.instance.currentUser!.displayName,
             'player2': null,
@@ -177,13 +177,13 @@ class ApplicationState extends ChangeNotifier {
 
     QuerySnapshot registration =
         await FirebaseFirestore.instance
-            .collection(collectionName)
+            .collection(partnersCollection)
             .where('gameTime', isEqualTo: gameTime)
             .where('player1', isEqualTo: player1)
             .get();
 
     if (registration.docs.isEmpty) {
-      FirebaseFirestore.instance.collection(collectionName).add(<String, dynamic>{
+      FirebaseFirestore.instance.collection(partnersCollection).add(<String, dynamic>{
         'player1': player1,
         'player2': player2,
         'gameTime': gameTime,
@@ -205,7 +205,7 @@ class ApplicationState extends ChangeNotifier {
     String name = FirebaseAuth.instance.currentUser!.displayName!;
     String? pname;
     CollectionReference db = FirebaseFirestore.instance.collection(
-      collectionName,
+      partnersCollection,
     );
 
     // delete calling user's registration
