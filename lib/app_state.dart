@@ -25,13 +25,13 @@ class ApplicationState extends ChangeNotifier {
   set currentDate(DateTime t) {
     DateTime.now();
   }
+
   String partnersCollection = 'partnershipdesk';
   String requestsCollection = 'requests';
   List<Registration> _registeredPlayers = [];
   List<Registration> get registeredPlayers => _registeredPlayers;
   List<Request> _activeRequests = [];
   List<Request> get activeRequests => _activeRequests;
-  
 
   void resetCurrentDate(Timer t) {
     currentDate = DateTime.now();
@@ -79,11 +79,7 @@ class ApplicationState extends ChangeNotifier {
                 var y = document.get('requestee') as String;
                 var z = document.get('requestor') as String;
                 _activeRequests.add(
-                  Request(
-                    gameTime: x,
-                    requestee: y,
-                    requestor: z,
-                  ),
+                  Request(gameTime: x, requestee: y, requestor: z),
                 );
               }
               notifyListeners();
@@ -117,15 +113,16 @@ class ApplicationState extends ChangeNotifier {
     String requestee = FirebaseAuth.instance.currentUser!.displayName!;
     assert(requestee != requestor);
 
-    await FirebaseFirestore.instance.collection(requestsCollection)
-    .where('gameTime', isEqualTo: gameTime)
-    .where('requestee', isEqualTo: requestee)
-    .where('requestor', isEqualTo: requestor)
-    .get()
-    .then((snapshot) {
-      var doc = snapshot.docs.first;
-      doc.reference.delete();
-    });
+    await FirebaseFirestore.instance
+        .collection(requestsCollection)
+        .where('gameTime', isEqualTo: gameTime)
+        .where('requestee', isEqualTo: requestee)
+        .where('requestor', isEqualTo: requestor)
+        .get()
+        .then((snapshot) {
+          var doc = snapshot.docs.first;
+          doc.reference.delete();
+        });
   }
 
   Future<void> acceptAction(String gameTime, String requestor) async {
@@ -183,11 +180,13 @@ class ApplicationState extends ChangeNotifier {
             .get();
 
     if (registration.docs.isEmpty) {
-      FirebaseFirestore.instance.collection(partnersCollection).add(<String, dynamic>{
-        'player1': player1,
-        'player2': player2,
-        'gameTime': gameTime,
-      });
+      FirebaseFirestore.instance.collection(partnersCollection).add(
+        <String, dynamic>{
+          'player1': player1,
+          'player2': player2,
+          'gameTime': gameTime,
+        },
+      );
     }
   }
 

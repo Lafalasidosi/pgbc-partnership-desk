@@ -45,10 +45,12 @@ class _RequestListState extends State<RequestList> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(onPressed: () {
-                          widget.acceptAction(x.gameTime, x.requestor);
-                        }, 
-                        child: Text('Accept')),
+                        ElevatedButton(
+                          onPressed: () {
+                            widget.acceptAction(x.gameTime, x.requestor);
+                          },
+                          child: Text('Accept'),
+                        ),
                         ElevatedButton(
                           onPressed: () {
                             widget.declineAction(x.gameTime, x.requestor);

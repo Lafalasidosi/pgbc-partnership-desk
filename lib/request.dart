@@ -8,5 +8,4 @@ class Request {
   String requestor;
   String requestee;
   String gameTime;
-
 }
