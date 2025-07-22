@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
                                 (gameTime, pname) => appState
                                     .addPlayerWithPartner(gameTime, pname),
                             upcomingGameDate: appState.getUpcomingDayAsString(
-                              3,
+                              4,
                             ),
                             registeredPlayers: appState.registeredPlayers,
                             sendRequest:
