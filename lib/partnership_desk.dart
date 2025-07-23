@@ -133,7 +133,9 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                     !registered
                         ? null
                         : () async {
-                          await widget.deregisterForPartner(widget.upcomingGameDate);
+                          await widget.deregisterForPartner(
+                            widget.upcomingGameDate,
+                          );
                           setState(() {
                             registered = false;
                           });

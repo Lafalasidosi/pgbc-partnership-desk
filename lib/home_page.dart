@@ -27,8 +27,6 @@ class HomePage extends StatelessWidget {
                   },
                 ),
           ),
-          Consumer<ApplicationState>(builder: (context, appState, _) =>
-          StyledButton(child: Text('reset'), onPressed: appState.clearOldPartnershipDesks)),
           Row(
             children: [
               Consumer<ApplicationState>(
@@ -41,7 +39,8 @@ class HomePage extends StatelessWidget {
                             registerForPartner:
                                 (gameTime) => appState
                                     .addPlayerLookingForPartner(gameTime),
-                            deregisterForPartner: (gameTime) => appState.deregister(gameTime),
+                            deregisterForPartner:
+                                (gameTime) => appState.deregister(gameTime),
                             registerWithPartner:
                                 (gameTime, pname) => appState
                                     .addPlayerWithPartner(gameTime, pname),
@@ -67,7 +66,8 @@ class HomePage extends StatelessWidget {
                             registerForPartner:
                                 (gameTime) => appState
                                     .addPlayerLookingForPartner(gameTime),
-                            deregisterForPartner: (gameTime) => appState.deregister(gameTime),
+                            deregisterForPartner:
+                                (gameTime) => appState.deregister(gameTime),
                             registerWithPartner:
                                 (gameTime, pname) => appState
                                     .addPlayerWithPartner(gameTime, pname),

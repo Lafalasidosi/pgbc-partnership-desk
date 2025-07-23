@@ -43,20 +43,18 @@ class ApplicationState extends ChangeNotifier {
     // For every listing in collection "partnershipdesk", convert the gameTime
     // field into a DateTime. Then, if that document's date is before the
     // _currentDate, delete it.
-    var olds = FirebaseFirestore.instance
-                  .collection(partnersCollection)
-                  .get();
+    var olds = FirebaseFirestore.instance.collection(partnersCollection).get();
 
-        olds.then((snapshot) {
-          for (var doc in snapshot.docs) {
-            String oldDateAsString = doc.get('gameTime');
-            
-            DateTime oldDate = DateTime.parse(oldDateAsString);
-            if (currentDate.isAfter(oldDate)) {
-              doc.reference.delete();
-            }
-          }
-        });
+    olds.then((snapshot) {
+      for (var doc in snapshot.docs) {
+        String oldDateAsString = doc.get('gameTime');
+
+        DateTime oldDate = DateTime.parse(oldDateAsString);
+        if (currentDate.isAfter(oldDate)) {
+          doc.reference.delete();
+        }
+      }
+    });
   }
 
   Future<void> init() async {
@@ -67,8 +65,6 @@ class ApplicationState extends ChangeNotifier {
     Timer.periodic(Duration(days: 1), resetCurrentDate);
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
-
-    String? name = FirebaseAuth.instance.currentUser?.displayName;
 
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
@@ -229,12 +225,14 @@ class ApplicationState extends ChangeNotifier {
     );
 
     // delete calling user's registration
-    var regQuery = db.where(
-      Filter.or(
-        Filter('player1', isEqualTo: name),
-        Filter('player2', isEqualTo: name),
-      ),
-    ).where('gameTime', isEqualTo: gameTime);
+    var regQuery = db
+        .where(
+          Filter.or(
+            Filter('player1', isEqualTo: name),
+            Filter('player2', isEqualTo: name),
+          ),
+        )
+        .where('gameTime', isEqualTo: gameTime);
 
     QuerySnapshot querySnapshot = await regQuery.get();
 
