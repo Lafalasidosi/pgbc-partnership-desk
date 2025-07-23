@@ -62,7 +62,7 @@ class ApplicationState extends ChangeNotifier {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    Timer.periodic(Duration(days: 1), resetCurrentDate);
+    Timer.periodic(Duration(seconds: 1), (Timer t) => resetCurrentDate);
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
