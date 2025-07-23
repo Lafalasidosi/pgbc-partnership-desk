@@ -51,9 +51,24 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
     return Form(
       key: _formKey,
       child: Container(
-        width: 300,
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(7, 7),
+              color: Color.fromARGB(255, 115, 115, 115))
+          ],
+          color: Color.fromARGB(255, 177, 250, 182),
+          borderRadius: BorderRadius.all(Radius.circular(45)),
+          border: Border(
+            top: BorderSide(),
+            bottom: BorderSide(),
+            left: BorderSide(),
+            right: BorderSide(),
+          )
+        ),
+        width: 500,
         alignment: Alignment.center,
-        color: Color.fromARGB(160, 0, 228, 100),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -77,7 +92,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                   backgroundColor: WidgetStatePropertyAll(
                     registered
                         ? Color.fromARGB(186, 90, 86, 93)
-                        : Color.fromARGB(187, 126, 3, 240),
+                        : Color.fromARGB(185, 41, 47, 244),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
                 ),
@@ -85,7 +100,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.only(start: 30, end: 30),
+              padding: EdgeInsetsDirectional.only(start: 130, end: 130),
               child: TextFormField(
                 controller: _controller,
                 decoration: InputDecoration(helperText: 'Partner\'s name'),
@@ -119,7 +134,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                   backgroundColor: WidgetStatePropertyAll(
                     registered
                         ? Color.fromARGB(186, 90, 86, 93)
-                        : Color.fromARGB(187, 126, 3, 240),
+                        : Color.fromARGB(185, 41, 47, 244),
                   ),
                   foregroundColor: WidgetStatePropertyAll(Color(0xffffffff)),
                 ),
@@ -164,7 +179,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                       child: Text(registration.player1),
                     )
                     : Text(
-                      '${registration.player1} : ${registration.player2}\n',
+                      '${registration.player1} & ${registration.player2}\n',
                     ),
             ],
           ],
