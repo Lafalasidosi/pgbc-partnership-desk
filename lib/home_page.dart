@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                             registerForPartner:
                                 (gameTime) => appState
                                     .addPlayerLookingForPartner(gameTime),
-                            deregisterForPartner: () => appState.deregister(),
+                            deregisterForPartner: (gameTime) => appState.deregister(gameTime),
                             registerWithPartner:
                                 (gameTime, pname) => appState
                                     .addPlayerWithPartner(gameTime, pname),
@@ -67,7 +67,7 @@ class HomePage extends StatelessWidget {
                             registerForPartner:
                                 (gameTime) => appState
                                     .addPlayerLookingForPartner(gameTime),
-                            deregisterForPartner: () => appState.deregister(),
+                            deregisterForPartner: (gameTime) => appState.deregister(gameTime),
                             registerWithPartner:
                                 (gameTime, pname) => appState
                                     .addPlayerWithPartner(gameTime, pname),

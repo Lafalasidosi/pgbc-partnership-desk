@@ -18,7 +18,7 @@ class PartnershipDesk extends StatefulWidget {
   });
 
   final FutureOr<void> Function(String) registerForPartner;
-  final FutureOr<void> Function() deregisterForPartner;
+  final FutureOr<void> Function(String) deregisterForPartner;
   final FutureOr<void> Function(String, String) registerWithPartner;
   final String upcomingGameDate;
   final List<Registration> registeredPlayers;
@@ -133,7 +133,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
                     !registered
                         ? null
                         : () async {
-                          await widget.deregisterForPartner();
+                          await widget.deregisterForPartner(widget.upcomingGameDate);
                           setState(() {
                             registered = false;
                           });

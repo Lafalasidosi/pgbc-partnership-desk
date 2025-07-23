@@ -147,7 +147,7 @@ class ApplicationState extends ChangeNotifier {
   }
 
   Future<void> acceptAction(String gameTime, String requestor) async {
-    await deregister();
+    await deregister(gameTime);
     addPlayerWithPartner(gameTime, requestor);
     deleteRequest(gameTime, requestor);
   }
@@ -216,7 +216,7 @@ class ApplicationState extends ChangeNotifier {
   /// "player2" in the corresponding Firebase document. No matter
   /// which is the case, amend the document so that the player
   /// originally registered with remains so but with no partner.
-  Future<void> deregister() async {
+  Future<void> deregister(String gameTime) async {
     // Assumes the calling user is registered for a given game.
     if (!_loggedIn) {
       throw Exception('You must be logged in to do that!');
@@ -234,7 +234,7 @@ class ApplicationState extends ChangeNotifier {
         Filter('player1', isEqualTo: name),
         Filter('player2', isEqualTo: name),
       ),
-    );
+    ).where('gameTime', isEqualTo: gameTime);
 
     QuerySnapshot querySnapshot = await regQuery.get();
 
