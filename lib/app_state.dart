@@ -39,6 +39,26 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
+  FutureOr<void> clearOldPartnershipDesks() async {
+    // For every listing in collection "partnershipdesk", convert the gameTime
+    // field into a DateTime. Then, if that document's date is before the
+    // _currentDate, delete it.
+    var olds = FirebaseFirestore.instance
+                  .collection(partnersCollection)
+                  .get();
+
+        olds.then((snapshot) {
+          for (var doc in snapshot.docs) {
+            String oldDateAsString = doc.get('gameTime');
+            
+            DateTime oldDate = DateTime.parse(oldDateAsString);
+            if (currentDate.isAfter(oldDate)) {
+              doc.reference.delete();
+            }
+          }
+        });
+  }
+
   Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
