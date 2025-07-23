@@ -20,6 +20,7 @@ class ApplicationState extends ChangeNotifier {
   bool get loggedIn => _loggedIn;
   StreamSubscription<QuerySnapshot>? _partnershipDeskSubscription;
   StreamSubscription<QuerySnapshot>? _activeRequestsSubscription;
+  // ignore: prefer_final_fields
   DateTime _currentDate = DateTime.now();
   DateTime get currentDate => _currentDate;
   set currentDate(DateTime t) {
