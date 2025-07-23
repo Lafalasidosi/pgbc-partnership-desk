@@ -247,46 +247,8 @@ class ApplicationState extends ChangeNotifier {
 
   /// Extends `getUpcomingDay` to return a String instead of DateTime.
   String getUpcomingDayAsString(int dayOfWeek) {
-    // This method and `getUpcomingDay` are currently pretty hard-coded.
-
-    DateTime today = DateTime.now();
-    String? weekdayName;
-    String? monthName;
-    int date;
-    int year;
-    String time = '6:45pm';
-    final Map<int, String> dayMap = {
-      1: 'Monday',
-      2: 'Tuesday',
-      3: 'Wednesday',
-      4: 'Thursday',
-      5: 'Friday',
-      6: 'Saturday',
-      7: 'Sunday',
-    };
-
-    final Map<int, String> monthMap = {
-      1: 'January',
-      2: 'February',
-      3: 'March',
-      4: 'April',
-      5: 'May',
-      6: 'June',
-      7: 'July',
-      8: 'August',
-      9: 'September',
-      10: 'October',
-      11: 'November',
-      12: 'December',
-    };
-
-    DateTime gameDay = getUpcomingDay(today, dayOfWeek);
-
-    weekdayName = dayMap[dayOfWeek];
-    monthName = monthMap[gameDay.month];
-    year = gameDay.year;
-    date = gameDay.day;
-
-    return "$weekdayName, $monthName $date $year $time";
+    var nextDay = getUpcomingDay(DateTime.now(), dayOfWeek);
+    var nextDayNoHour = nextDay.toString().split(' ')[0];
+    return nextDayNoHour;
   }
 }
