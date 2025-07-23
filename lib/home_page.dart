@@ -28,7 +28,8 @@ class HomePage extends StatelessWidget {
           ),
           Column(
             spacing: 20,
-            children: [
+            children: [ 
+              for (int i in [1, 2, 3, 4, 5, 6, 7])
               Consumer<ApplicationState>(
                 builder:
                     (context, appState, _) => Visibility(
@@ -45,34 +46,7 @@ class HomePage extends StatelessWidget {
                                 (gameTime, pname) => appState
                                     .addPlayerWithPartner(gameTime, pname),
                             upcomingGameDate: appState.getUpcomingDayAsString(
-                              2,
-                            ),
-                            registeredPlayers: appState.registeredPlayers,
-                            sendRequest:
-                                (gameTime, requestee) =>
-                                    appState.sendRequest(gameTime, requestee),
-                          ),
-                        ],
-                      ),
-                    ),
-              ),
-              Consumer<ApplicationState>(
-                builder:
-                    (context, appState, _) => Visibility(
-                      visible: appState.loggedIn,
-                      child: Column(
-                        children: [
-                          PartnershipDesk(
-                            registerForPartner:
-                                (gameTime) => appState
-                                    .addPlayerLookingForPartner(gameTime),
-                            deregisterForPartner:
-                                (gameTime) => appState.deregister(gameTime),
-                            registerWithPartner:
-                                (gameTime, pname) => appState
-                                    .addPlayerWithPartner(gameTime, pname),
-                            upcomingGameDate: appState.getUpcomingDayAsString(
-                              4,
+                              i,
                             ),
                             registeredPlayers: appState.registeredPlayers,
                             sendRequest:
