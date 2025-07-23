@@ -26,7 +26,8 @@ class HomePage extends StatelessWidget {
                   },
                 ),
           ),
-          Row(
+          Column(
+            spacing: 20,
             children: [
               Consumer<ApplicationState>(
                 builder:
