@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:flutter/material.dart';
 import 'package:pdv0/partnership_desk.dart';
 import 'package:pdv0/request_list.dart';
-import 'package:pdv0/src/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'app_state.dart';
