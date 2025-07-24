@@ -12,11 +12,13 @@ class RequestList extends StatefulWidget {
     required this.activeRequests,
     required this.acceptAction,
     required this.declineAction,
+    required this.gameTime,
   });
 
   final List<Request> activeRequests;
   final Future<void> Function(String, String) acceptAction;
   final Future<void> Function(String, String) declineAction;
+  final String gameTime;
 
   @override
   State<StatefulWidget> createState() => _RequestListState();
@@ -33,7 +35,7 @@ class _RequestListState extends State<RequestList> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (Request x in widget.activeRequests)
-            if (x.requestee == username)
+            if (x.requestee == username && x.gameTime == widget.gameTime)
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,

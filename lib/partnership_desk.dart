@@ -36,18 +36,23 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
   bool get validate => _validate;
   List<Registration> ps = [];
 
+  bool containsUser(List<Registration> ps, String username) {
+    for (var x in ps) {
+      if (x.player1 == username || x.player2 == username) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     String? userName = FirebaseAuth.instance.currentUser!.displayName!;
     ps =
         widget.registeredPlayers
-            .where(
-              (entry) =>
-                  ((entry.player1 == userName || entry.player2 == userName) &&
-                      entry.gameTime == widget.upcomingGameDate),
-            )
+            .where((entry) => (entry.gameTime == widget.upcomingGameDate))
             .toList();
-    registered = ps.isNotEmpty;
+    registered = containsUser(ps, userName);
     return Form(
       key: _formKey,
       child: Container(
@@ -56,7 +61,8 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
           boxShadow: [
             BoxShadow(
               offset: Offset(7, 7),
-              color: Color.fromARGB(255, 115, 115, 115))
+              color: Color.fromARGB(255, 115, 115, 115),
+            ),
           ],
           color: Color.fromARGB(255, 177, 250, 182),
           borderRadius: BorderRadius.all(Radius.circular(45)),
@@ -65,7 +71,7 @@ class _PartnershipDeskState extends State<PartnershipDesk> {
             bottom: BorderSide(),
             left: BorderSide(),
             right: BorderSide(),
-          )
+          ),
         ),
         width: 500,
         alignment: Alignment.center,
