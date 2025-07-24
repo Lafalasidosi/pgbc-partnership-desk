@@ -28,51 +28,58 @@ class HomePage extends StatelessWidget {
           ),
           Column(
             spacing: 20,
-            children: [ 
+            children: [
               for (int i in [1, 2, 3, 4, 5, 6, 7])
-              Consumer<ApplicationState>(
-                builder:
-                    (context, appState, _) => Visibility(
-                      visible: appState.loggedIn,
-                      child: Column(
-                        children: [
-                          PartnershipDesk(
-                            registerForPartner:
-                                (gameTime) => appState
-                                    .addPlayerLookingForPartner(gameTime),
-                            deregisterForPartner:
-                                (gameTime) => appState.deregister(gameTime),
-                            registerWithPartner:
-                                (gameTime, pname) => appState
-                                    .addPlayerWithPartner(gameTime, pname),
-                            upcomingGameDate: appState.getUpcomingDayAsString(
-                              i,
+                Consumer<ApplicationState>(
+                  builder:
+                      (context, appState, _) => Visibility(
+                        visible: appState.loggedIn,
+                        child: Column(
+                          children: [
+                            PartnershipDesk(
+                              registerForPartner:
+                                  (gameTime) => appState
+                                      .addPlayerLookingForPartner(gameTime),
+                              deregisterForPartner:
+                                  (gameTime) => appState.deregister(gameTime),
+                              registerWithPartner:
+                                  (gameTime, pname) => appState
+                                      .addPlayerWithPartner(gameTime, pname),
+                              upcomingGameDate: appState.getUpcomingDayAsString(
+                                i,
+                              ),
+                              registeredPlayers: appState.registeredPlayers,
+                              sendRequest:
+                                  (gameTime, requestee) =>
+                                      appState.sendRequest(gameTime, requestee),
                             ),
-                            registeredPlayers: appState.registeredPlayers,
-                            sendRequest:
-                                (gameTime, requestee) =>
-                                    appState.sendRequest(gameTime, requestee),
-                          ),
-                        ],
+                            Consumer<ApplicationState>(
+                              builder:
+                                  (context, appState, _) => Visibility(
+                                    visible: appState.loggedIn,
+                                    child: RequestList(
+                                      gameTime: appState.getUpcomingDayAsString(i),
+                                      activeRequests: appState.activeRequests,
+                                      acceptAction:
+                                          (gameTime, requestor) =>
+                                              appState.acceptAction(
+                                                gameTime,
+                                                requestor,
+                                              ),
+                                      declineAction:
+                                          (gameTime, requestee) =>
+                                              appState.deleteRequest(
+                                                gameTime,
+                                                requestee,
+                                              ),
+                                    ),
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-              ),
-            ],
-          ),
-          Consumer<ApplicationState>(
-            builder:
-                (context, appState, _) => Visibility(
-                  visible: appState.loggedIn,
-                  child: RequestList(
-                    activeRequests: appState.activeRequests,
-                    acceptAction:
-                        (gameTime, requestor) =>
-                            appState.acceptAction(gameTime, requestor),
-                    declineAction:
-                        (gameTime, requestee) =>
-                            appState.deleteRequest(gameTime, requestee),
-                  ),
                 ),
+            ],
           ),
         ],
       ),
