@@ -49,6 +49,11 @@ class _RequestListState extends State<RequestList> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
+// If the requestor is registered as needing a partner, he is not deregistered.
+// To reproduce, there must be another player registered as needing partner.
+// Then, register as needing a partner.
+// Request a game of this other player.
+// If the other player accepts, you will show up as with AND without partner.                           
                             widget.acceptAction(x.gameTime, x.requestor);
                           },
                           child: Text('Accept'),
