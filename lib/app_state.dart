@@ -36,6 +36,7 @@ class ApplicationState extends ChangeNotifier {
 
   void resetCurrentDate(Timer t) {
     currentDate = DateTime.now();
+    clearOldPartnershipDesks();
     notifyListeners();
   }
 
@@ -62,7 +63,8 @@ class ApplicationState extends ChangeNotifier {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    Timer.periodic(Duration(seconds: 1), (Timer t) => resetCurrentDate);
+    clearOldPartnershipDesks();
+    Timer.periodic(Duration(days: 1), (Timer t) => resetCurrentDate(t));
 
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
